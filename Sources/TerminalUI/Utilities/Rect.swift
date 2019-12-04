@@ -7,8 +7,8 @@ public struct Rect {
     var width = 0
     var height = 0
     
-    public var rangeX: ClosedRange<Int> { x ... (x + width) }
-    public var rangeY: ClosedRange<Int> { y ... (y + height) }
+    public var rangeX: ClosedRange<Int> { x ... (x + width - 1) }
+    public var rangeY: ClosedRange<Int> { y ... (y + height - 1) }
     
     //MARK: - Initialization
     

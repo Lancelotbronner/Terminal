@@ -22,7 +22,7 @@ public final class Terminal {
     
     //MARK: - Non-Blocking
     
-    static func nonBlocking<T>(_ f: () -> T) -> T {
+    public static func nonBlocking<T>(_ f: () -> T) -> T {
         let needsSetup = !isNonBlocking
         if needsSetup { enableNonBlocking() }
         let tmp = f()
@@ -30,13 +30,13 @@ public final class Terminal {
         return tmp
     }
     
-    static func disableNonBlocking() {
+    public static func disableNonBlocking() {
         // restore default terminal mode
         tcsetattr(STDIN_FILENO, TCSANOW, &term)
         isNonBlocking = false
     }
     
-    static func enableNonBlocking(rawMode: Bool = false) {
+    public static func enableNonBlocking(rawMode: Bool = false) {
         // store current terminal mode
         tcgetattr(STDIN_FILENO, &term)
         atexit { Terminal.disableNonBlocking() }
