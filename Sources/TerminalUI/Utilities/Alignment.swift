@@ -21,14 +21,14 @@ public struct Alignment {
         vertical = v
     }
     
-    static let topLeading = Alignment(.leading, .top)
-    static let centerLeading = Alignment(.leading, .center)
-    static let bottomLeading = Alignment(.leading, .bottom)
-    static let topCenter = Alignment(.center, .top)
-    static let center = Alignment(.center, .center)
-    static let bottomCenter = Alignment(.center, .bottom)
-    static let topTrailing = Alignment(.trailing, .top)
-    static let centerTrailing = Alignment(.trailing, .center)
-    static let bottomTrailing = Alignment(.trailing, .bottom)
+    public static let topLeading = Alignment(.leading, .top)
+    public static let centerLeading = Alignment(.leading, .center)
+    public static let bottomLeading = Alignment(.leading, .bottom)
+    public static let topCenter = Alignment(.center, .top)
+    public static let center = Alignment(.center, .center)
+    public static let bottomCenter = Alignment(.center, .bottom)
+    public static let topTrailing = Alignment(.trailing, .top)
+    public static let centerTrailing = Alignment(.trailing, .center)
+    public static let bottomTrailing = Alignment(.trailing, .bottom)
     
 }

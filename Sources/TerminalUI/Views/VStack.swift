@@ -1,4 +1,4 @@
-public final class HStack: View {
+public final class VStack: View {
     
     //MARK: - Properties
     
@@ -16,24 +16,24 @@ public final class HStack: View {
     
     //MARK: - View
     
-    public var queryHeight: Length { HostingView.getMaximumHeight(in: items) }
-    public var queryWidth: Length { .infinity }
+    public var queryHeight: Length { .infinity }
+    public var queryWidth: Length { HostingView.getMaximumWidth(in: items) }
     
     public func draw(in rect: Rect) {
-        let availableSpace = rect.width - spacing * (items.count - 1)
-        let lengths = items.map { $0.queryWidth }
+        let availableSpace = rect.height - spacing * (items.count - 1)
+        let lengths = items.map { $0.queryHeight }
         let absoluteItems = lengths.filter { !$0.isInfinity }
         let flexibleItems = lengths.filter { $0.isInfinity }
         let absoluteSpace = absoluteItems.reduce(0, +).toInt
         let flexibleSpace = availableSpace - absoluteSpace
         let flexibleDistribution = flexibleItems.count == 0 ? 0 : flexibleSpace / flexibleItems.count
         
-        var x = rect.x
+        var y = rect.y
         for i in 0 ..< items.count {
             let length = lengths[i]
-            let width = length.isInfinity ? flexibleDistribution : length.toInt
-            items[i].draw(in: Rect(x, rect.y, width, rect.height))
-            x += width + spacing
+            let height = length.isInfinity ? flexibleDistribution : length.toInt
+            items[i].draw(in: Rect(rect.x, y, rect.width, height))
+            y += height + spacing
         }
     }
     

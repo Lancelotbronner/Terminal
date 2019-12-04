@@ -6,6 +6,10 @@ extension HostingView {
         getMaximum(in: views.map { $0.queryHeight })
     }
     
+    static func getMaximumWidth(in views: [View]) -> Length {
+        getMaximum(in: views.map { $0.queryWidth })
+    }
+    
     static func getMaximum(in queries: [Length]) -> Length {
         var largest: Length = 0
         for q in queries {

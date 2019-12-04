@@ -18,9 +18,10 @@ public struct Color: View {
     public var queryHeight: Length { .infinity }
     
     public func draw(in rect: Rect) {
-        Terminal.moveTo(rect.y, rect.x)
+        Terminal.moveToColumn(rect.x)
         Terminal.set(background: color)
-        for _ in rect.rangeY {
+        for y in rect.rangeY {
+            Terminal.moveTo(y, rect.x)
             for _ in rect.rangeX {
                 Terminal.write(" ")
             }

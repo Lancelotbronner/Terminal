@@ -2,8 +2,8 @@ public struct Rect {
     
     //MARK: - Properties
     
-    var x = 0
-    var y = 0
+    var x = 1
+    var y = 1
     var width = 0
     var height = 0
     
@@ -22,7 +22,7 @@ public struct Rect {
     }
     
     public init(_ w: Int, _ h: Int) {
-        self.init(0, 0, w, h)
+        self.init(1, 1, w, h)
     }
     
 }

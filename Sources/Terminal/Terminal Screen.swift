@@ -130,6 +130,9 @@ extension Terminal {
     }
     
     public static func readScreenSize() -> (row: Int, col: Int) {
+        return (32, 100)
+        
+        // If in xcode, will hang
         var str = request(CSI, "18t", "t")  // returns ^[8;row;colt
         if str.isEmpty { return (-1, -1) }
         

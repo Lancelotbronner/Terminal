@@ -7,6 +7,14 @@ public protocol View {
     var queryHeight: Length { get }
 }
 
+extension View {
+    
+    public func frame(width: Length? = nil, height: Length? = nil) -> View {
+        Frame(self, width, height)
+    }
+    
+}
+
 //MARK: - Empty View
 
 struct Empty: View {

@@ -87,6 +87,7 @@ public final class Terminal {
             var response = ""
             var key: UInt8  = 0
             repeat {
+                // If in xcode, will hang
                 Darwin.read(STDIN_FILENO, &key, 1)
                 response.append(key < 32 ? "^" : char(key))
             } while key != until.asciiValue

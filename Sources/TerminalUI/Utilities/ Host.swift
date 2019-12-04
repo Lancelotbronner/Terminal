@@ -1,3 +1,5 @@
+import Foundation
+
 //MARK: - Interface
 
 public final class HostingView {
