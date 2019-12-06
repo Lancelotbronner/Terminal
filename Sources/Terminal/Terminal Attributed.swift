@@ -10,66 +10,68 @@ extension TerminalStyle {
     public var description: String { code.description }
 }
 
-extension Terminal {
-    
-    //MARK: - Colors
-    
-    public enum Background: UInt8, TerminalStyle {
-        case black = 40
-        case red
-        case green
-        case yellow
-        case blue
-        case magenta
-        case cyan
-        case white
-        case `default` = 49
-    }
-    
-    public enum Foreground: UInt8, TerminalStyle {
-        case black = 30
-        case red
-        case green
-        case yellow
-        case blue
-        case magenta
-        case cyan
-        case white
-        case `default` = 39
-        case lightBlack = 90
-        case lightRed
-        case lightGreen
-        case lightYellow
-        case lightBlue
-        case lightMagenta
-        case lightCyan
-        case lightWhite
-    }
-    
-    //MARK: - Styles
-    
-    public enum Style: UInt8, TerminalStyle {
-        case `default` = 0
-        case bold = 1
-        case dim = 2
-        case italic = 3
-        case underline = 4
-        case blink = 5
-        case swap = 7
-    }
+//MARK: - Colors
 
-    //MARK: - Cursor
+public enum Background: UInt8, TerminalStyle {
+    case black = 40
+    case red
+    case green
+    case yellow
+    case blue
+    case magenta
+    case cyan
+    case white
+    case `default` = 49
+}
+
+public enum Foreground: UInt8, TerminalStyle {
+    case black = 30
+    case red
+    case green
+    case yellow
+    case blue
+    case magenta
+    case cyan
+    case white
+    case `default` = 39
+    case lightBlack = 90
+    case lightRed
+    case lightGreen
+    case lightYellow
+    case lightBlue
+    case lightMagenta
+    case lightCyan
+    case lightWhite
+}
+
+//MARK: - Styles
+
+public enum Style: UInt8, TerminalStyle {
+    case `default` = 0
+    case bold = 1
+    case dim = 2
+    case italic = 3
+    case underline = 4
+    case blink = 5
+    case swap = 7
+}
+
+//MARK: - Cursor
+
+public enum Cursor: UInt8, TerminalStyle {
+    case block = 1
+    case line = 3
+    case bar = 5
     
-    public enum Cursor: UInt8, TerminalStyle {
-        case block = 1
-        case line = 3
-        case bar = 5
-        
-        func code(blinking: Bool) -> UInt8 {
-            blinking ? code + 1 : code
-        }
-        
+    func code(blinking: Bool) -> UInt8 {
+        blinking ? code + 1 : code
     }
+    
+}
+
+//MARK: - Terminal
+
+extension Terminal {
     
     //MARK: - Set Attributes
     

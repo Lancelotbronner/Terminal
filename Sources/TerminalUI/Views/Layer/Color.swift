@@ -1,14 +1,14 @@
 import Terminal
 
-public struct Color: View {
+public struct Color: Presentable {
     
     //MARK: - Properties
     
-    var color: Terminal.Background
+    let color: Background
     
     //MARK: - Initialization
     
-    public init(_ c: Terminal.Background) {
+    public init(_ c: Background) {
         color = c
     }
     

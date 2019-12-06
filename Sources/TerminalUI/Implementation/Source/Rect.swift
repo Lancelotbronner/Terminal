@@ -4,6 +4,7 @@ public struct Rect {
     
     var x = 1
     var y = 1
+    
     var width = 0
     var height = 0
     
@@ -17,8 +18,8 @@ public struct Rect {
     public init(_ x: Int, _ y: Int, _ w: Int, _ h: Int) {
         self.x = x
         self.y = y
-        width = w
-        height = h
+        width = w < 0 ? 0 : w
+        height = h < 0 ? 0 : h
     }
     
     public init(_ w: Int, _ h: Int) {

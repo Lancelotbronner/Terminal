@@ -8,6 +8,7 @@ public struct Length {
     
     private var _value: Int?
     
+    var tryValue: Int? { _value }
     var value: Int { _value == nil ? Int.max : _value! }
     var isInfinity: Bool { _value == nil }
     
@@ -78,12 +79,28 @@ extension Length: Equatable, Comparable {
     
 }
 
+//MARK: - Collection
+
+extension Array where Element == Length {
+    
+    public var min: Length { self.min() ?? 0 }
+    public var max: Length { self.max() ?? 0 }
+    public var fixedSum: Int { self.reduce(0, +).tryValue ?? 0 }
+    
+    public var separated: (infinite: [Length], fixed: [Length]) {
+        var f: [Length] = []
+        var a: [Length] = []
+        for l in self {
+            if l.isInfinity { f.append(l) }
+            else { a.append(l) }
+        }
+        return (f, a)
+    }
+    
+}
+
 //MARK: - Conversion
 
 extension Int {
     var toLength: Length { .init(self) }
-}
-
-extension Length {
-    var toInt: Int { value }
 }

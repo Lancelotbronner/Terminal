@@ -125,12 +125,14 @@ extension Terminal {
     
     //MARK: - Screen
     
+    public static let (height, width) = readScreenSize()
+    
     public static func scrollRegion(top: Int, bottom: Int) {
         csi(top, "\(bottom)r")
     }
     
     public static func readScreenSize() -> (row: Int, col: Int) {
-        return (32, 100)
+        return (32, 100) // to prevent crashing in xcode
         
         // If in xcode, will hang
         var str = request(CSI, "18t", "t")  // returns ^[8;row;colt
