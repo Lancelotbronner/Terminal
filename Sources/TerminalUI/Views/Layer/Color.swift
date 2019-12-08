@@ -1,6 +1,6 @@
 import Terminal
 
-public struct Color: Presentable {
+public struct Color: Presentable, View {
     
     //MARK: - Properties
     

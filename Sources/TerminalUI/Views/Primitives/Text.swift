@@ -29,8 +29,6 @@ public struct Text: Presentable, View {
     
     //MARK: - View
     
-    public var body: some View { Empty() }
-    
     public var queryHeight: Length { 1 }
     public var queryWidth: Length { .init(string.count) }
     

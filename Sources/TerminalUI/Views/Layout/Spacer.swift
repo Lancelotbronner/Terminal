@@ -1,4 +1,4 @@
-public struct Spacer: Presentable {
+public struct Spacer: Presentable, View {
     
     //MARK: - Properties
     

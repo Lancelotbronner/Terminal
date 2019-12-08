@@ -1,10 +1,20 @@
+
+//MARK: - Views
+
 @available(OSX 10.15.0, *)
-protocol AnyTuppleView {
+protocol Views {
     var presentables: [Presentable] { get }
 }
 
 @available(OSX 10.15.0, *)
-public struct Tupple2<V1, V2>: AnyTuppleView where V1: View, V2: View {
+extension Views {
+    public var body: some View { Empty() }
+}
+
+//MARK: - Tupple Views
+
+@available(OSX 10.15.0, *)
+struct Tupple2<V1, V2>: Views, View where V1: View, V2: View {
     
     let presentables: [Presentable]
     
@@ -16,7 +26,7 @@ public struct Tupple2<V1, V2>: AnyTuppleView where V1: View, V2: View {
 }
 
 @available(OSX 10.15.0, *)
-public struct Tupple3<V1, V2, V3>: AnyTuppleView where V1: View, V2: View, V3: View {
+struct Tupple3<V1, V2, V3>: Views, View where V1: View, V2: View, V3: View {
     
     let presentables: [Presentable]
     
@@ -29,7 +39,7 @@ public struct Tupple3<V1, V2, V3>: AnyTuppleView where V1: View, V2: View, V3: V
 }
 
 @available(OSX 10.15.0, *)
-public struct Tupple4<V1, V2, V3, V4>: AnyTuppleView where V1: View, V2: View, V3: View, V4: View {
+struct Tupple4<V1, V2, V3, V4>: Views, View where V1: View, V2: View, V3: View, V4: View {
     
     let presentables: [Presentable]
     

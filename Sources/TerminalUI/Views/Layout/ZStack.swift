@@ -1,5 +1,5 @@
 @available(OSX 10.15.0, *)
-public struct ZStack: Presentable {
+public struct ZStack: Presentable, View {
     
     //MARK: - Properties
     

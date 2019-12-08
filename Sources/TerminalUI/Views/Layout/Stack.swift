@@ -2,7 +2,7 @@
 //MARK: - Generic Stack
 
 @available(OSX 10.15.0, *)
-fileprivate protocol AnyStack: Presentable {
+fileprivate protocol AnyStack: Presentable, View {
     associatedtype Aligned: AnyAlignment
     
     var alignment: Aligned { get }
@@ -10,7 +10,6 @@ fileprivate protocol AnyStack: Presentable {
     var items: [Presentable] { get }
     
     init(_ a: Aligned, _ s: Int, _ cs: [Presentable])
-    init<V: AnyTuppleView>(alignment a: Aligned, spacing s: Int, _ view: V)
     
     func dimension(_ r: Rect) -> Dimensions
     func position(_ sPos: Int, _ oPos: Int, _ sLen: Int, _ oLen: Int) -> Rect
@@ -20,8 +19,12 @@ fileprivate protocol AnyStack: Presentable {
 @available(OSX 10.15.0, *)
 extension AnyStack {
     
+    //MARK: - Typealiases
+    
     typealias Dimensions = (sPos: Int, oPos: Int, sLen: Int, oLen: Int)
     typealias Queries = (s: (Presentable) -> Length, o: (Presentable) -> Length)
+    
+    //MARK: - View
     
     private func getLengths(_ mp: (Presentable) -> Length) -> (ls: [Length], fl: [Length], fi: [Length]) {
         let lengths = items.map(mp)
@@ -79,14 +82,14 @@ public struct HStack: AnyStack {
     
     //MARK: - Initialization
     
-    init(_ a: Aligned = .center, _ s: Int = 0, _ contents: [Presentable]) {
+    fileprivate init(_ a: Aligned = .center, _ s: Int = 0, _ contents: [Presentable]) {
         items = contents
         alignment = a
         spacing = s
     }
     
-    init<V: AnyTuppleView>(alignment a: Aligned = .center, spacing s: Int = 0, _ view: V) {
-        self.init(a, s, view.presentables)
+    public init<V: View>(alignment a: Aligned = .center, spacing s: Int = 0, @ViewBuilder _ view: Built<V>) {
+        self.init(a, s, view().asPresentables)
     }
     
     //MARK: - View
@@ -123,14 +126,14 @@ public struct VStack: AnyStack {
     
     //MARK: - Initialization
     
-    init(_ a: Aligned = .center, _ s: Int = 0, _ contents: [Presentable]) {
+    fileprivate init(_ a: Aligned = .center, _ s: Int = 0, _ contents: [Presentable]) {
         items = contents
         alignment = a
         spacing = s
     }
     
-    init<V: AnyTuppleView>(alignment a: Aligned = .center, spacing s: Int = 0, _ view: V) {
-        self.init(a, s, view.presentables)
+    public init<V: View>(alignment a: Aligned = .center, spacing s: Int = 0, @ViewBuilder _ view: Built<V>) {
+        self.init(a, s, view().asPresentables)
     }
     
     //MARK: - View

@@ -5,25 +5,25 @@ public typealias Built<V: View> = () -> V
 
 @available(OSX 10.15.0, *)
 @_functionBuilder
-final class ViewBuilder {
+public final class ViewBuilder {
 
-//    static func buildBlock() -> Empty {
-//        Empty()
-//    }
+    public static func buildBlock() -> Empty {
+        Empty()
+    }
     
-    static func buildBlock<V: View>(_ c: V) -> V {
+    public static func buildBlock<V: View>(_ c: V) -> V {
         c
     }
     
-    static func buildBlock<C1, C2>(_ c1: C1, _ c2: C2) -> Tupple2<C1, C2> {
+    public static func buildBlock<C1: View, C2: View>(_ c1: C1, _ c2: C2) -> some View {
         Tupple2(c1, c2)
     }
     
-    static func buildBlock<C1, C2, C3>(_ c1: C1, _ c2: C2, _ c3: C3) -> Tupple3<C1, C2, C3> {
+    public static func buildBlock<C1: View, C2: View, C3: View>(_ c1: C1, _ c2: C2, _ c3: C3) -> some View {
         Tupple3(c1, c2, c3)
     }
     
-    static func buildBlock<C1, C2, C3, C4>(_ c1: C1, _ c2: C2, _ c3: C3, _ c4: C4) -> Tupple4<C1, C2, C3, C4> {
+    public static func buildBlock<C1: View, C2: View, C3: View, C4: View>(_ c1: C1, _ c2: C2, _ c3: C3, _ c4: C4) -> some View {
         Tupple4(c1, c2, c3, c4)
     }
     

@@ -7,6 +7,4 @@ public struct Empty: Presentable, View {
     var queryHeight: Length { 0 }
     
     func draw(in rect: Rect) { }
-    
-    public var body: some View { Empty() }
 }

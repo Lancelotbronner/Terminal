@@ -20,11 +20,12 @@ public struct Window {
     
     public init<V: View>(size: Rect? = nil, alignment a: Alignment = .center, @ViewBuilder _ view: Built<V>) {
         self.init(view().asPresentable, size, a)
+        display()
     }
     
     //MARK: - Methods
     
-    public func display() {
+    func display() {
         Align(root, alignment).draw(in: screen)
     }
     

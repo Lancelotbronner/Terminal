@@ -13,6 +13,8 @@ protocol Presentable {
 @available(OSX 10.15.0, *)
 extension Presentable {
     
+    public var body: some View { Empty() }
+    
     public func background(_ v: Presentable, clipToBounds: Bool = true) -> Presentable {
         ZStack(v, self)
             .frame(width: clipToBounds ? queryWidth : nil, height: clipToBounds ? queryHeight : nil)
