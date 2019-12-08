@@ -1,5 +1,5 @@
 @available(OSX 10.15.0, *)
-struct Padding: Presentable {
+struct Padding: Presentable, View {
     
     //MARK: - Properties
     

@@ -15,13 +15,13 @@ extension Presentable {
     
     public var body: some View { Empty() }
     
-    public func background(_ v: Presentable, clipToBounds: Bool = true) -> Presentable {
-        ZStack(v, self)
+    public func background(_ v: Presentable, alignment a: Alignment = .center, clipToBounds: Bool = true) -> Presentable {
+        ZStack(a, [v, self])
             .frame(width: clipToBounds ? queryWidth : nil, height: clipToBounds ? queryHeight : nil)
     }
     
-    public func overlay(_ v: Presentable, clipToBounds: Bool = true) -> Presentable {
-        ZStack(self, v)
+    public func overlay(_ v: Presentable, alignment a: Alignment = .center, clipToBounds: Bool = true) -> Presentable {
+        ZStack(a, [self, v])
             .frame(width: clipToBounds ? queryWidth : nil, height: clipToBounds ? queryHeight : nil)
     }
     

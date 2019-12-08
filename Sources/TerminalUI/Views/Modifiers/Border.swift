@@ -1,7 +1,7 @@
 import Terminal
 
 @available(OSX 10.15.0, *)
-struct Border: Presentable {
+struct Border: Presentable, View {
     
     //MARK: - Properties
     

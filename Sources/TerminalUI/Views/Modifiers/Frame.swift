@@ -1,5 +1,5 @@
 @available(OSX 10.15.0, *)
-struct Frame: Presentable {
+struct Frame: Presentable, View {
     
     //MARK: - Properties
     

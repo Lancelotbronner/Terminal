@@ -76,7 +76,7 @@ public struct HStack: AnyStack {
     
     public typealias Aligned = VerticalAlignment
     
-    let alignment: VerticalAlignment
+    let alignment: Aligned
     let spacing: Int
     let items: [Presentable]
     
@@ -118,9 +118,9 @@ public struct VStack: AnyStack {
     
     //MARK: - Properties
     
-    public typealias Aligned = VerticalAlignment
+    public typealias Aligned = HorizontalAlignment
     
-    let alignment: VerticalAlignment
+    let alignment: Aligned
     let spacing: Int
     let items: [Presentable]
     

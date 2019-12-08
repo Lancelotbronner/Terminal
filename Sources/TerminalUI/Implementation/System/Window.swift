@@ -18,6 +18,7 @@ public struct Window {
         screen = s ?? Rect(Terminal.width, Terminal.height)
     }
     
+    @discardableResult
     public init<V: View>(size: Rect? = nil, alignment a: Alignment = .center, @ViewBuilder _ view: Built<V>) {
         self.init(view().asPresentable, size, a)
         display()

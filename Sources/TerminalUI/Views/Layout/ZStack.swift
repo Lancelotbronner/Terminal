@@ -8,9 +8,13 @@ public struct ZStack: Presentable, View {
     
     //MARK: - Initialization
     
-    init(alignment a: Alignment = .center, _ contents: Presentable...) {
+    init(_ a: Alignment = .center, _ contents: [Presentable]) {
         items = contents
         alignment = a
+    }
+    
+    public init<V: View>(alignment a: Alignment = .center, @ViewBuilder _ contents: Built<V>) {
+        self.init(a, contents().asPresentables)
     }
     
     //MARK: - View
