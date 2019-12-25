@@ -1,95 +1,146 @@
 extension Terminal {
     
-    //MARK: - Cursor Style
+    //MARK: - Cursor
     
-    public static func set(cursor: Cursor, blinking: Bool = true) {
-        csi(cursor.code(blinking: blinking), "q")
+    /// Sets the cursor's visibility
+    ///
+    /// - Parameter visible: Wether the cursor is shown or not
+    public static func set(cursorVisibility visible: Bool) {
+        if visible { cursorOn() }
+        else { cursorOff() }
     }
     
+    /// Makes the cursor invisible
     public static func cursorOff() {
         csi("?25l")
         isCursorVisible = false
     }
     
+    /// Makes the cursor visible
     public static func cursorOn() {
         csi("?25h")
         isCursorVisible = true
     }
     
-    //MARK: - Cursor Position
+    //MARK: - Position
     
-    public static func cursor() -> (row: Int, col: Int) {
+    /// The cursor's position
+    ///
+    /// This property is simply a shortcut to `getPosition()`
+    public static var position: Position { getPosition() }
+    
+    /// Gets the cursor's position
+    public static func getPosition() -> Position {
         let str = request(CSI, "6n", "R")  // returns ^[row;colR
         if str.isEmpty { return (-1, -1) }
         
         let esc = str.firstIndex(of: "[")!
         let del = str.firstIndex(of: ";")!
         let end = str.firstIndex(of: "R")!
-        let row = String(str[str.index(after: esc)...str.index(before: del)])
-        let col = String(str[str.index(after: del)...str.index(before: end)])
+        let row = String(str[str.index(after: esc) ... str.index(before: del)])
+        let col = String(str[str.index(after: del) ... str.index(before: end)])
         
         return (Int(row)!, Int(col)!)
     }
     
-    public static func storeCursor() {
+    /// Stores the cursor position to be restored later
+    public static func storePosition() {
         write(ESC, "7")
     }
     
-    public static func restoreCursor() {
+    /// Restores the cursor position to what was stored
+    public static func restorePosition() {
         write(ESC, "8")
     }
     
-    public static func moveUp(_ n: Int = 1) {
+    /// Move the cursor up
+    ///
+    /// - Parameter n: The number of lines
+    public static func up(_ n: Int = 1) {
         csi("\(n)A")
     }
     
-    public static func moveDown(_ n: Int = 1) {
+    /// Move the cursor down
+    ///
+    /// - Parameter n: The number of lines
+    public static func down(_ n: Int = 1) {
         csi("\(n)B")
     }
     
-    public static func moveRight(_ n: Int = 1) {
+    /// Move the cursor right
+    ///
+    /// - Parameter n: The number of columns
+    public static func right(_ n: Int = 1) {
         csi("\(n)C")
     }
     
-    public static func moveLeft(_ n: Int = 1) {
+    /// Move the cursor left
+    ///
+    /// - Parameter n: The number of columns
+    public static func left(_ n: Int = 1) {
         csi("\(n)D")
     }
     
-    public static func moveLineDown(_ n: Int = 1) {
-        csi("\(n)E")
+    /// Moves down to the beginning of a line
+    ///
+    /// - Parameter line: The number of lines
+    public static func down(line: Int = 1) {
+        csi("\(line)E")
     }
     
-    public static func moveLineUp(_ n: Int = 1) {
-        csi("\(n)F")
+    /// Moves up to the beginning of a line
+    ///
+    /// - Parameter line: The number of lines
+    public static func up(line: Int = 1) {
+        csi("\(line)F")
     }
     
-    public static func moveToColumn(_ col: Int) {
+    /// Moves the cursor along its line
+    ///
+    /// - Parameter col: The column to move to
+    public static func goto(_ col: Int) {
         csi("\(col)G")
     }
     
-    public static func moveTo(_ row: Int, _ col: Int) {
+    /// Moves the cursor to a position
+    ///
+    /// - Parameters:
+    ///   - row: The line to move to
+    ///   - col: The column to move to
+    public static func goto(_ row: Int, _ col: Int) {
         csi(row, "\(col)H")
     }
     
     //MARK: - Text Editing
     
-    public static func insertLine(_ row: Int = 1) {
-        csi("\(row)L")
+    /// Inserts a newline
+    ///
+    /// - Parameter line: The location at which to insert the line
+    public static func insert(line: Int = 1) {
+        csi("\(line)L")
     }
     
-    public static func deleteLine(_ row: Int = 1) {
-        csi("\(row)M")
+    /// Inserts a newline
+    ///
+    /// - Parameter line: The location at which to insert the line
+    public static func delete(line: Int = 1) {
+        csi("\(line)M")
     }
     
+    /// Deletes a character on the current line
+    ///
+    /// - Parameter char: The location at which to delete the char
     public static func delete(char: Int = 1) {
         csi("\(char)P")
     }
     
+    /// Allows the user to replace characters while they type
     public static func enableReplaceMode() {
         csi("4l")
         isReplacing = true
     }
     
+    /// Keeps the user from replacing characters while they type
     public static func disableReplaceMode() {
         csi("4h")
         isReplacing = false
@@ -97,42 +148,76 @@ extension Terminal {
     
     //MARK: - Clear
     
+    /// Clears the screen from the cursor to the end of the screen
     public static func clearBelow() {
         csi("0J")
     }
     
+    /// Clears the screen from its start to the cursor
     public static func clearAbove() {
         csi("1J")
     }
     
+    /// Clears the entire screen and scrollback buffer
     public static func clearScreen() {
-        csi("2J")
-        csi("3J")
-        csi("H")
+        scrollToClear()
+        clearScrollbackBuffer()
     }
     
+    /// Clears from the cursor to its line's end
     public static func clearToEndOfLine() {
         csi("0K")
     }
     
+    /// Clears from the beginning of the current line to the cursor
     public static func clearToStartOfLine() {
         csi("1K")
     }
     
+    /// Clears the entire line
     public static func clearLine() {
         csi("2K")
     }
     
-    //MARK: - Screen
+    //MARK: - Scroll
     
-    public static let (height, width) = readScreenSize()
-    
-    public static func scrollRegion(top: Int, bottom: Int) {
-        csi(top, "\(bottom)r")
+    /// Clears the screen by scrolling down
+    public static func scrollToClear() {
+        csi("2J")
+        csi("H")
     }
     
-    public static func readScreenSize() -> (row: Int, col: Int) {
-        return (32, 100) // to prevent crashing in xcode
+    /// Clears the scrollback buffer
+    public static func clearScrollbackBuffer() {
+        csi("3J")
+    }
+    
+    /// Scrolls the screen by moving the lines down
+    ///
+    /// - Parameter n: The number of lines to scroll
+    public static func scrollDown(_ n: Int = 1) {
+        csi("\(n)S")
+    }
+    
+    /// Scrolls the screen by moving the lines up
+    ///
+    /// - Parameter n: The number of lines to scroll
+    public static func scrollUp(_ n: Int = 1) {
+        csi("\(n)T")
+    }
+    
+    //MARK: - Size
+    
+    /// The screen size
+    ///
+    /// This property is simply a shortcut to `getSize()`
+    public static var size: Size { getSize() }
+    
+    /// Gets the screen's size in characters
+    public static func getSize() -> Size {
+//        return (32, 100) // to prevent crashing in xcode
+        
+        // TODO: If debugging through XCode terminal, this will never complete
         
         // If in xcode, will hang
         var str = request(CSI, "18t", "t")  // returns ^[8;row;colt

@@ -38,10 +38,10 @@ struct Border: Presentable, View {
         
         var ln = 1
         for y in rect.rangeY {
-            Terminal.moveTo(y, rect.x)
+            Terminal.goto(y, rect.x)
             Terminal.write(border)
             if ln > width && ln <= (rect.height - width) {
-                Terminal.moveToColumn(rect.rangeX.upperBound - width + 1)
+                Terminal.goto(rect.rangeX.upperBound - width + 1)
             } else {
                 Terminal.write(String(repeating: char ?? " ", count: rect.width - axisWidth))
             }
@@ -50,7 +50,7 @@ struct Border: Presentable, View {
         }
         
         content.draw(in: Rect(rect.x + width, rect.y + width, rect.width - width, rect.height - width))
-        Terminal.plain()
+        Terminal.reset()
     }
     
 }

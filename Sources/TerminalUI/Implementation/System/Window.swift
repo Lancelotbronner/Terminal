@@ -15,7 +15,7 @@ public struct Window {
     init(_ v: Presentable, _ s: Rect? = nil, _ a: Alignment = .center) {
         root = v
         alignment = a
-        screen = s ?? Rect(Terminal.width, Terminal.height)
+        screen = s ?? Rect(Terminal.size.width, Terminal.size.height)
     }
     
     @discardableResult

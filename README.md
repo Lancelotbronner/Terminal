@@ -1,12 +1,17 @@
 # Terminal
 
-A description of this package.
+This package aims to aid in the making of Command-Line Applications by providing an API to wrap
+ANSI commands.
 
-# TODO
+The package contains two modules: `Terminal` and `TerminalUI`.
+The later is currently unusable as it is way too experimental
 
-- some additional work on Alignment, maybe a view which aligns other views?
-- stack views work but a VStack currently onlt specifies how it's content is adjusted vertically
-    ( Text                      vs          (
-    ( Longer Text                       (
-    (                                           ( Text
-    (                                           ( Longer Text
+*Any help, comments or interest would be welcome!*
+
+## Terminal
+
+A simple API wrapped in the `Terminal` class to allow using the terminal to it's *(almost)* full power!
+
+## TerminalUI - DO NOT USE
+
+A **very** experimental UI system for the terminal, it aims to be close to SwiftUI.

@@ -4,51 +4,91 @@ extension Terminal {
     
     //MARK: - Key Codes
     
+    /// Text flow keys, controls whitespace, deleting and others
     public enum FlowKey: Character {
-        case none = "\u{00}" // \0 NUL
-        case bell = "\u{07}" // \a BELL
-        case erase = "\u{08}" // BS
-        case tab = "\u{09}" // \t TAB (horizontal)
-        case linefeed = "\u{0A}" // \n LF
-        case vtab = "\u{0B}" // \v VT (vertical tab)
-        case formfeed = "\u{0C}" // \f FF
-        case enter = "\u{0D}" // \r CR
-        case eol = "\u{1A}" // SUB or EOL
-        case esc = "\u{1B}" // \e ESC
-        case space = "\u{20}" // SPACE
-        case del = "\u{7F}" // DEL
+        /// \0 NUL
+        case none = "\u{00}"
+        /// \a BELL
+        case bell = "\u{07}"
+        /// BS
+        case erase = "\u{08}"
+        /// \t TAB
+        case tab = "\u{09}"
+        /// \n LF
+        case linefeed = "\u{0A}"
+        /// \v VT
+        case vtab = "\u{0B}"
+        /// \f FF
+        case formfeed = "\u{0C}"
+        /// \r CR
+        case enter = "\u{0D}"
+        /// SUB or EOL
+        case eol = "\u{1A}"
+        /// \e ESC
+        case esc = "\u{1B}"
+        /// SPACE
+        case space = "\u{20}"
+        /// DEL
+        case del = "\u{7F}"
         
-        var char: Character { rawValue }
+        /// The key's character value
+        public var char: Character { rawValue }
+        
+        /// The key's ASCII code
         var code: UInt8 { rawValue.asciiValue! }
     }
     
-    public enum Key: UInt8 {
-        case none = 0 // null
+    /// Complementary keys such as the f`x` or arrow keys
+    public enum ComplementaryKey: UInt8 {
+        /// null
+        case none = 0
         
-        case up = 65 // ESC [ A
-        case down = 66 // ESC [ B
-        case right = 67 // ESC [ C
-        case left = 68 // ESC [ D
+        /// ESC [ A
+        case up = 65
+        /// ESC [ B
+        case down = 66
+        /// ESC [ C
+        case right = 67
+        /// ESC [ D
+        case left = 68
         
-        case end = 70 // ESC [ F or ESC [ 4~
-        case home = 72 // ESC [ H or ESC [ 1~
-        case insert = 2 // ESC [ 2~
-        case delete = 3 // ESC [ 3~
-        case pageUp = 5 // ESC [ 5~
-        case pageDown = 6 // ESC [ 6~
+        /// ESC [ F or ESC [ 4~
+        case end = 70
+        /// ESC [ H or ESC [ 1~
+        case home = 72
+        /// ESC [ 2~
+        case insert = 2
+        /// ESC [ 3~
+        case delete = 3
+        /// ESC [ 5~
+        case pageUp = 5
+        /// ESC [ 6~
+        case pageDown = 6
         
-        case f1 = 80 // ESC O P or ESC [ 11~
-        case f2 = 81 // ESC O Q or ESC [ 12~
-        case f3 = 82 // ESC O R or ESC [ 13~
-        case f4 = 83 // ESC O S or ESC [ 14~
-        case f5 = 15 // ESC [ 15~
-        case f6 = 17 // ESC [ 17~
-        case f7 = 18 // ESC [ 18~
-        case f8 = 19 // ESC [ 19~
-        case f9 = 20 // ESC [ 20~
-        case f10 = 21 // ESC [ 21~
-        case f11 = 23 // ESC [ 23~
-        case f12 = 24 // ESC [ 24~
+        /// ESC O P or ESC [ 11~
+        case f1 = 80
+        /// ESC O Q or ESC [ 12~
+        case f2 = 81
+        /// ESC O R or ESC [ 13~
+        case f3 = 82
+        /// ESC O S or ESC [ 14~
+        case f4 = 83
+        /// ESC [ 15~
+        case f5 = 15
+        /// ESC [ 17~
+        case f6 = 17
+        /// ESC [ 18~
+        case f7 = 18
+        /// ESC [ 19~
+        case f8 = 19
+        /// ESC [ 20~
+        case f9 = 20
+        /// ESC [ 21~
+        case f10 = 21
+        /// ESC [ 23~
+        case f11 = 23
+        /// ESC [ 24~
+        case f12 = 24
         
         init(CSINumber key: UInt8) {
             switch key {
@@ -101,58 +141,46 @@ extension Terminal {
         }
     }
     
+    /// Control keys
     public enum MetaKey: UInt8 {
+        /// ESC [ x ; 5~ or ESC [ x ; 6~ or ESC [ x ; 7~ or ESC [ x ; 8~
         case control = 1
+        /// ESC [ x ; 2~ or ESC [ x ; 4~ or ESC [ x ; 6~ or ESC [ x ; 8~
         case shift = 2
+        /// ESC [ x ; 3~ or ESC [ x ; 4~ or ESC [ x ; 7~ or ESC [ x ; 8~
         case alt = 3
         
         static func CSIMeta(_ key: UInt8) -> [MetaKey] {
             switch key {
-            case  2: return [.shift]                     // ESC [ x ; 2~
-            case  3: return [.alt]                       // ESC [ x ; 3~
-            case  4: return [.shift, .alt]               // ESC [ x ; 4~
-            case  5: return [.control]                   // ESC [ x ; 5~
-            case  6: return [.shift, .control]           // ESC [ x ; 6~
-            case  7: return [.alt, .control]           // ESC [ x ; 7~
-            case  8: return [.shift, .alt, .control]   // ESC [ x ; 8~
+            case  2: return [.shift]
+            case  3: return [.alt]
+            case  4: return [.shift, .alt]
+            case  5: return [.control]
+            case  6: return [.shift, .control]
+            case  7: return [.alt, .control]
+            case  8: return [.shift, .alt, .control]
             default: return []
             }
         }
     }
     
-    //MARK: - Predicates
+    //MARK: - Methods
     
-    static func isLetter(_ key: Int) -> Bool {
-        65...90 ~= key
-    }
-    
-    static func isNumber(_ key: Int) -> Bool {
-        48...57 ~= key
-    }
-    
-    static func isLetter(_ str: String) -> Bool {
-        "A"..."Z" ~= str
-    }
-    
-    static func isNumber(_ str: String) -> Bool {
-        "0"..."9" ~= str
-    }
-    
-    //MARK: - Input Assess
-    
-    static var isKeyPressed: Bool {
+    /// Wether any keys are currently being pressed
+    static var isAnyKeyPressed: Bool {
         if !isNonBlocking { enableNonBlocking() }
         var fds = [pollfd(fd: STDIN_FILENO, events: Int16(POLLIN), revents: 0)]
         return poll(&fds, 1, 0) > 0
     }
     
-    public static func readKey() -> (code: Key, meta: [MetaKey]) {
+    /// Reads a complementary key and all meta keys
+    public static func readKey() -> (code: ComplementaryKey, meta: [MetaKey]) {
         nonBlocking {
-            var code = Key.none
+            var code = ComplementaryKey.none
             var meta: [MetaKey] = []
             
             // make sure there is data in stdin
-            guard isKeyPressed else { return (code, meta) }
+            guard isAnyKeyPressed else { return (code, meta) }
             
             var val: Int = 0
             var key: Int = 0
@@ -167,7 +195,7 @@ extension Terminal {
                     
                     switch true {
                     case isLetter(key):
-                        code = Key(CSILetter: UInt8(key))
+                        code = ComplementaryKey(CSILetter: UInt8(key))
                         break loop
                         
                     case isNumber(key):
@@ -182,7 +210,7 @@ extension Terminal {
                         val = Int(cmd)!  // guaranted valid number
                         
                         guard chr == ";" else {
-                            code = Key(CSINumber: UInt8(val))
+                            code = ComplementaryKey(CSINumber: UInt8(val))
                             break loop
                         }
                         
@@ -191,11 +219,11 @@ extension Terminal {
                         
                         if val == 1 {  // CSI + 1 + ; + meta
                             key = readCode() // CSI + 1 + ; + meta + letter
-                            if isLetter(key) { code = Key(CSILetter: UInt8(key)) }
+                            if isLetter(key) { code = ComplementaryKey(CSILetter: UInt8(key)) }
                             break loop
                         }
                         else {// CSI + numbers + ; + meta + ~
-                            code = Key(CSINumber: UInt8(val))
+                            code = ComplementaryKey(CSINumber: UInt8(val))
                             _ = readCode()  // dismiss the tilde (guaranted)
                             break loop
                         }
@@ -207,7 +235,7 @@ extension Terminal {
                 case SS3:
                     key = readCode()
                     if isLetter(key) {
-                        code = Key(SS3Letter: UInt8(key))
+                        code = ComplementaryKey(SS3Letter: UInt8(key))
                     }
                     break loop
                     
@@ -218,6 +246,24 @@ extension Terminal {
             
             return (code, meta)
         }
+    }
+    
+    //MARK: - Private Utilities
+    
+    private static func isLetter(_ key: Int) -> Bool {
+        65...90 ~= key
+    }
+    
+    private static func isNumber(_ key: Int) -> Bool {
+        48...57 ~= key
+    }
+    
+    private static func isLetter(_ str: String) -> Bool {
+        "A"..."Z" ~= str
+    }
+    
+    private static func isNumber(_ str: String) -> Bool {
+        "0"..."9" ~= str
     }
     
 }

@@ -4,17 +4,25 @@ extension Terminal {
     
     //MARK: - Flush
     
+    /// Flushes the specified streams
+    ///
+    /// - Parameters:
+    ///   - in: Wether to flush stdin
+    ///   - out: Wether to flush stdout
     @inlinable
     public static func flush(in a: Bool = true, out b: Bool = true) {
         if a { flushInput() }
         if b { flushOutput() }
     }
     
+    /// Flushes stdin
     @inlinable
     public static func flushInput() {
         fflush(stdin)
     }
     
+    
+    /// Flushes stdout
     @inlinable
     public static func flushOutput() {
         fflush(stdout)
@@ -22,44 +30,65 @@ extension Terminal {
     
     //MARK: - Write
     
+    /// Writes the text with the specified attributes
+    ///
+    /// This method does not overwrite current attributes
+    ///
+    /// - Parameters:
+    ///   - str: Any number of strings to write
+    ///   - color: The text's color
+    ///   - background: The text's background color
+    ///   - style: The text's style
     public static func write(_ str: String..., color: Foreground? = nil, background: Background? = nil, style: Style? = nil) {
-        if let v = color { set(foreground: v) }
-        if let v = background { set(background: v) }
-        if let v = style { set(style: v) }
+        if let v = color {
+            storeForeground()
+            set(foreground: v)
+        }
+        if let v = background {
+            storeBackground()
+            set(background: v)
+        }
+        if let v = style {
+            storeStyle()
+            set(style: v)
+        }
         print(str.joined(), terminator: "")
-        if color != nil { plainForeground() }
-        if background != nil { plainBackground() }
-        if style != nil { plainStyle() }
+        if color != nil { restoreForeground() }
+        if background != nil { restoreBackground() }
+        if style != nil { restoreStyle() }
     }
     
+    
+    /// Writes the text with the specified attributes and a newline at the end
+    ///
+    /// This method does not overwrite current attributes
+    ///
+    /// - Parameters:
+    ///   - str: Any number of strings to write
+    ///   - color: The text's color
+    ///   - background: The text's background color
+    ///   - style: The text's style
     public static func writeln(_ str: String..., color: Foreground? = nil, background: Background? = nil, style: Style? = nil) {
         write(str.joined(separator: "\n") + "\n", color: color, background: background, style: style)
     }
     
     //MARK: - Read
     
-    // check key from input poll
-    public static func isAnyKeyPressed() -> Bool {
-        nonBlocking {
-            var fds = [pollfd(fd: STDIN_FILENO, events: Int16(POLLIN), revents: 0)]
-            return poll(&fds, 1, 0) > 0
-        }
-    }
-    
-    // read key as character
+    /// Read currently pressed key as a character
     public static func read() -> Character {
         var key: UInt8 = 0
         let res = Darwin.read(STDIN_FILENO, &key, 1)
         return res < 0 ? "\0" : Character(UnicodeScalar(key))
     }
     
-    // read key as ascii code
+    /// Read currently pressed key as an ASCII code
     public static func readCode() -> Int {
         var key: UInt8 = 0
         let res = Darwin.read(STDIN_FILENO, &key, 1)
         return res < 0 ? 0 : Int(key)
     }
     
+    /// Waits for the user to input some text
     public static func readln() -> String {
         var str: String? = nil
         while str == nil {
@@ -68,39 +97,72 @@ extension Terminal {
         return str!
     }
     
-    public static func ask(_ q: String, cleanup: Bool = false) -> String {
-        write(q)
+    //MARK: - Ask
+    
+    /// Prints a question and waits for an answer
+    ///
+    /// - Parameters:
+    ///   - question: The question to first write
+    ///   - cleanup: If stdin should be flushed first
+    public static func ask(_ question: String, cleanup: Bool = false) -> String {
+        write(question)
         if cleanup { flush() }
         return readln()
     }
     
-    //MARK: - Write to std
+    /// Prints a question with a newline and waits for an answer
+    ///
+    /// - Parameters:
+    ///   - question: The question to first write
+    ///   - cleanup: If stdin should be flushed first
+    public static func askln(_ question: String, cleanup: Bool = false) -> String {
+        writeln(question)
+        if cleanup { flush() }
+        return readln()
+    }
     
-    // direct write to standard output
+    //MARK: - Direct Write
+    
+    /// Direct write to standard output
+    ///
+    /// - Parameters:
+    ///   - text: Any number of strings to write
+    ///   - suspend: An optional delay, negative flushes instead
     public static func std(_ text: String..., suspend: Int = 0) {
         text.forEach { Darwin.write(STDOUT_FILENO, $0, $0.utf8.count) }
         if suspend > 0 { delay(suspend) }
         if suspend < 0 { flush() }
     }
     
-    // direct write to standard output with new line
+    /// Direct write to standard output with new line
+    ///
+    /// - Parameters:
+    ///   - text: Any number of strings to write
+    ///   - suspend: An optional delay, negative flushes instead
     public static func stdln(_ text: String..., suspend: Int = 0) {
         text.forEach { Darwin.write(STDOUT_FILENO, $0, $0.utf8.count) }
-        Darwin.write(STDOUT_FILENO, "\n", 1)
-        if suspend > 0 { delay(suspend) }
-        if suspend < 0 { flush() }
+        stdln(suspend: suspend)
     }
     
-    // direct write to standard output only new line
+    /// Direct write a new line to standard output
+    ///
+    /// - Parameters:
+    ///   - suspend: An optional delay, negative flushes instead
     public static func stdln(suspend: Int = 0) {
         Darwin.write(STDOUT_FILENO, "\n", 1)
         if suspend > 0 { delay(suspend) }
         if suspend < 0 { flush() }
     }
     
-    // shortcut to write text at a given position
-    public static func stdat(_ row: Int, _ col: Int, _ text: String..., suspend: Int = 0) {
-        moveTo(row, col)
+    /// Shortcut to write text at a given position
+    ///
+    /// - Parameters:
+    ///   - row: The row at which to start writing
+    ///   - col: The column at which to start writing
+    ///   - text: Any number of strings to write
+    ///   - suspend: An optional delay, negative flushes instead
+    public static func std(at row: Int, _ col: Int, _ text: String..., suspend: Int = 0) {
+        goto(row, col)
         for txt in text { Darwin.write(STDOUT_FILENO, txt, txt.utf8.count) }
         if suspend > 0 { delay(suspend) }
         if suspend < 0 { flush() }

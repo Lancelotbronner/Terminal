@@ -18,15 +18,15 @@ public struct Color: Presentable, View {
     public var queryHeight: Length { .infinity }
     
     public func draw(in rect: Rect) {
-        Terminal.moveToColumn(rect.x)
+        Terminal.goto(rect.x)
         Terminal.set(background: color)
         for y in rect.rangeY {
-            Terminal.moveTo(y, rect.x)
+            Terminal.goto(y, rect.x)
             for _ in rect.rangeX {
                 Terminal.write(" ")
             }
         }
-        Terminal.plainBackground()
+        Terminal.resetBackground()
     }
     
 }

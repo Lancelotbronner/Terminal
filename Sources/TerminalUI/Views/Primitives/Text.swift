@@ -33,7 +33,7 @@ public struct Text: Presentable, View {
     public var queryWidth: Length { .init(string.count) }
     
     public func draw(in rect: Rect) {
-        Terminal.moveTo(rect.y, rect.x)
+        Terminal.goto(rect.y, rect.x)
         Terminal.write(string, color: color, background: background, style: style)
     }
     
