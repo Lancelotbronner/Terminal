@@ -154,16 +154,4 @@ public final class Terminal {
         }
     }
     
-    //MARK: - Private Utilities
-    
-    @inlinable
-    static func unicode(_ code: Int) -> Unicode.Scalar {
-        Unicode.Scalar(code) ?? "\0"
-    }
-    
-    @inlinable
-    static func char(_ code: UInt8) -> Character {
-        Character(UnicodeScalar(code))
-    }
-    
 }

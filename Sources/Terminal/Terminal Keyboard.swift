@@ -248,22 +248,4 @@ extension Terminal {
         }
     }
     
-    //MARK: - Private Utilities
-    
-    private static func isLetter(_ key: Int) -> Bool {
-        65...90 ~= key
-    }
-    
-    private static func isNumber(_ key: Int) -> Bool {
-        48...57 ~= key
-    }
-    
-    private static func isLetter(_ str: String) -> Bool {
-        "A"..."Z" ~= str
-    }
-    
-    private static func isNumber(_ str: String) -> Bool {
-        "0"..."9" ~= str
-    }
-    
 }

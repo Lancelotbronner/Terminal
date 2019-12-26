@@ -21,7 +21,6 @@ extension Terminal {
         fflush(stdin)
     }
     
-    
     /// Flushes stdout
     @inlinable
     public static func flushOutput() {
@@ -30,46 +29,20 @@ extension Terminal {
     
     //MARK: - Write
     
-    /// Writes the text with the specified attributes
-    ///
-    /// This method does not overwrite current attributes
+    /// Writes the text
     ///
     /// - Parameters:
     ///   - str: Any number of strings to write
-    ///   - color: The text's color
-    ///   - background: The text's background color
-    ///   - style: The text's style
-    public static func write(_ str: String..., color: Foreground? = nil, background: Background? = nil, style: Style? = nil) {
-        if let v = color {
-            storeForeground()
-            set(foreground: v)
-        }
-        if let v = background {
-            storeBackground()
-            set(background: v)
-        }
-        if let v = style {
-            storeStyle()
-            set(style: v)
-        }
+    public static func write(_ str: String...) {
         print(str.joined(), terminator: "")
-        if color != nil { restoreForeground() }
-        if background != nil { restoreBackground() }
-        if style != nil { restoreStyle() }
     }
     
-    
-    /// Writes the text with the specified attributes and a newline at the end
-    ///
-    /// This method does not overwrite current attributes
+    /// Writes the text
     ///
     /// - Parameters:
     ///   - str: Any number of strings to write
-    ///   - color: The text's color
-    ///   - background: The text's background color
-    ///   - style: The text's style
-    public static func writeln(_ str: String..., color: Foreground? = nil, background: Background? = nil, style: Style? = nil) {
-        write(str.joined(separator: "\n") + "\n", color: color, background: background, style: style)
+    public static func writeln(_ str: String...) {
+        write(str.joined(separator: "\n") + "\n")
     }
     
     //MARK: - Read

@@ -34,7 +34,8 @@ public struct Text: Presentable, View {
     
     public func draw(in rect: Rect) {
         Terminal.goto(rect.y, rect.x)
-        Terminal.write(string, color: color, background: background, style: style)
+        Terminal.set(foreground: color, background: background, style: style)
+        Terminal.write(string)
     }
     
 }

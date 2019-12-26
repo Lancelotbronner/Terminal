@@ -276,4 +276,20 @@ extension Terminal {
         set(cursor: storedCursor)
     }
     
+    //MARK: - Shortcuts
+    
+    /// Uses the specified attributes for the duration of the closure
+    /// - Parameters:
+    ///   - f: The text color
+    ///   - b: The text background color
+    ///   - s: The text style
+    ///   - c: The cursor style
+    ///   - closure: The closure to execute with those attributes
+    public static func attributed(foreground f: Foreground? = nil, background b: Background? = nil, style s: Style? = nil, cursor c: Cursor? = nil, _ closure: () -> Void) {
+        store(foreground: foreground, background: background, style: style, cursor: cursor)
+        set(foreground: f, background: b, style: s, cursor: c)
+        closure()
+        restore(foreground: true, background: true, style: true, cursor: true)
+    }
+    
 }
