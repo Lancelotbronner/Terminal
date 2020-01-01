@@ -1,5 +1,27 @@
 extension Terminal {
     
+    //MARK: - Writing
+    
+    /// Writes the attributed text
+    ///
+    /// - Parameters:
+    ///   - str: The attributed string to write
+    public static func write(_ str: String, color f: Foreground? = nil, background b: Background? = nil, style s: Style? = nil) {
+        attributed(foreground: f, background: b, style: s) {
+            print(str, terminator: "")
+        }
+    }
+    
+    /// Writes the attributed text and a new line
+    ///
+    /// - Parameters:
+    ///   - str: The attributed string to write
+    public static func writeln(_ str: String = "", color f: Foreground? = nil, background b: Background? = nil, style s: Style? = nil) {
+        attributed(foreground: f, background: b, style: s) {
+            print(str)
+        }
+    }
+    
     //MARK: - Filling
     
     /// Draws a horizontal line across the screen

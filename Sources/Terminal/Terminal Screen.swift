@@ -45,12 +45,12 @@ extension Terminal {
     
     /// Stores the cursor position to be restored later
     public static func storePosition() {
-        write(ESC, "7")
+        esc("7")
     }
     
     /// Restores the cursor position to what was stored
     public static func restorePosition() {
-        write(ESC, "8")
+        esc("8")
     }
     
     /// Move the cursor up

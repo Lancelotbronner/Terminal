@@ -129,6 +129,14 @@ public final class Terminal {
         std(CSI, str)
     }
     
+    /// Make a `ESC` request to the terminal
+    ///
+    /// - Parameter codes: Semicolon (`;`) separated arguments
+    static func esc(_ codes: CustomStringConvertible...) {
+        let str = codes.map { $0.description }.joined(separator: ";")
+        std(ESC, str)
+    }
+    
     /// Makes an ANSI request and returns the response
     ///
     /// - Parameters:
