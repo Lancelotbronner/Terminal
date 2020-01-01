@@ -6,9 +6,9 @@ extension Terminal {
     ///
     /// - Parameters:
     ///   - str: The attributed string to write
-    public static func write(_ str: String, color f: Foreground? = nil, background b: Background? = nil, style s: Style? = nil) {
+    public static func write(design str: String, color f: Foreground? = nil, background b: Background? = nil, style s: Style? = nil) {
         attributed(foreground: f, background: b, style: s) {
-            print(str, terminator: "")
+            write(str)
         }
     }
     
@@ -16,9 +16,9 @@ extension Terminal {
     ///
     /// - Parameters:
     ///   - str: The attributed string to write
-    public static func writeln(_ str: String = "", color f: Foreground? = nil, background b: Background? = nil, style s: Style? = nil) {
+    public static func writeln(design str: String = "", color f: Foreground? = nil, background b: Background? = nil, style s: Style? = nil) {
         attributed(foreground: f, background: b, style: s) {
-            print(str)
+            writeln(str)
         }
     }
     

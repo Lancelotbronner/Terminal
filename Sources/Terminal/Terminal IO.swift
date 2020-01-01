@@ -27,6 +27,24 @@ extension Terminal {
         fflush(stdout)
     }
     
+    //MARK: - Write
+    
+    /// Writes the text
+    ///
+    /// - Parameters:
+    ///   - str: The attributed string to write
+    public static func write(_ str: String) {
+        print(str, terminator: "")
+    }
+    
+    /// Writes the text and a new line
+    ///
+    /// - Parameters:
+    ///   - str: The attributed string to write
+    public static func writeln(_ str: String = "") {
+        print(str)
+    }
+    
     //MARK: - Read
     
     /// Read currently pressed key as a character

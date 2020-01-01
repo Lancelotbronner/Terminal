@@ -285,11 +285,11 @@ extension Terminal {
     ///   - s: The text style
     ///   - c: The cursor style
     ///   - closure: The closure to execute with those attributes
-    public static func attributed(foreground f: Foreground? = nil, background b: Background? = nil, style s: Style? = nil, cursor c: Cursor? = nil, _ closure: () -> Void) {
+    public static func attributed(foreground f: Foreground? = nil, background b: Background? = nil, style s: Style? = nil, cursor c: Cursor? = nil, _ closure: () -> Void = {}) {
         store(foreground: foreground, background: background, style: style, cursor: cursor)
         set(foreground: f, background: b, style: s, cursor: c)
         closure()
-        restore(foreground: true, background: true, style: true, cursor: true)
+        restore(foreground: f != nil, background: b != nil, style: s != nil, cursor: c != nil)
     }
     
 }
