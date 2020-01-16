@@ -31,18 +31,22 @@ extension Terminal {
     
     /// Writes the text
     ///
+    /// If multiple strings are passed, they will be joined as one
+    ///
     /// - Parameters:
-    ///   - str: The attributed string to write
-    public static func write(_ str: String) {
-        print(str, terminator: "")
+    ///   - str: The strings to write
+    public static func write(_ str: String...) {
+        print(str.joined(), terminator: "")
     }
     
     /// Writes the text and a new line
     ///
+    /// If multiple strings are passed, they will be different lines
+    ///
     /// - Parameters:
     ///   - str: The attributed string to write
-    public static func writeln(_ str: String = "") {
-        print(str)
+    public static func writeln(_ str: String...) {
+        print(str.joined(separator: "\n"))
     }
     
     //MARK: - Read
