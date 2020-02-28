@@ -15,6 +15,7 @@ let package = Package(
         .library(name: "TerminalUI2", targets: ["Terminal", "TerminalUI-2"]),
         .library(name: "TerminalView", targets: ["Terminal", "TerminalView"]),
         .library(name: "TerminalEngine", targets: ["Terminal", "TerminalEngine"]),
+        .library(name: "TerminalCommands", targets: ["Terminal", "TerminalCommands"]),
     ],
     targets: [
         .target(name: "Terminal"),
@@ -22,5 +23,6 @@ let package = Package(
         .target(name: "TerminalUI-2", dependencies: ["Terminal"]),
         .target(name: "TerminalView", dependencies: ["Terminal"]),
         .target(name: "TerminalEngine", dependencies: ["Terminal"]),
+        .target(name: "TerminalCommands", dependencies: ["Terminal"]),
     ]
 )
