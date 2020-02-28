@@ -11,10 +11,18 @@ protocol Presentable {
 extension Presentable {
     
     public var body: some View { Empty() }
-    var env: Environement { environement ?? .default }
+    var env: Environement {
+        get { environement ?? .default }
+        set { environement = newValue }
+    }
     
-    mutating func environement(_ env: Environement) -> Presentable {
+    mutating func environement(_ env: Environement) -> Self {
         environement = env
+        return self
+    }
+    
+    mutating func environement<V>(_ key: WritableKeyPath<Environement, V>, _ v: V) -> Self {
+        env[keyPath: key] = v
         return self
     }
     

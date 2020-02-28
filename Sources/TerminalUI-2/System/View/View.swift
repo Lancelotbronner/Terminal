@@ -11,6 +11,12 @@ extension View {
     
 }
 
+extension View where Self: Presentable {
+    
+    func environement(
+    
+}
+
 //MARK: - Views
 
 protocol Views: View {
