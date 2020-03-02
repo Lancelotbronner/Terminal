@@ -41,7 +41,7 @@ public final class Command {
     public convenience init(_ command: String, _ description: String, usage: String? = nil, _ action: @escaping QuickAction) {
         self.init(command, description, usage: usage) {
             try $0.assertEmpty()
-            action()
+            try action()
         }
     }
     
