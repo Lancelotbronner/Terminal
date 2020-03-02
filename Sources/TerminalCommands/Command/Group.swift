@@ -38,8 +38,7 @@ public final class CommandGroup {
     //MARK: Display
     
     func displayTitle() {
-        guard !title.isEmpty else { return }
-        Interpreter.writeln("\n[ \(title) ]\n") {
+        Interpreter.writeln("[ \(title) ]\n") {
             Terminal.write(design: "\n[", color: .cyan)
             Terminal.write(design: " \(title) ", color: .lightCyan, style: .bold)
             Terminal.writeln(design: "]\n", color: .cyan)
@@ -54,6 +53,7 @@ public final class CommandGroup {
             }
         }
         for k in commands.keys.sorted() {
+            print("    ", terminator: "")
             commands[k]!.displayHelp(width: maxDisplayWidth)
         }
     }

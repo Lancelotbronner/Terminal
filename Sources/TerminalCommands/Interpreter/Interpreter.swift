@@ -51,7 +51,7 @@ public final class Interpreter {
     
     private static func ask() -> String {
         write("\(_prompt) ") {
-            Terminal.write(design: "\(_prompt)", color: .magenta, style: .bold)
+            Terminal.write(design: "\(_prompt) ", color: .magenta, style: .bold)
         }
         
         if _usingRichText {
