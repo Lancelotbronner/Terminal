@@ -26,6 +26,11 @@ public final class StateMachine {
     public static var root: State { stack.first ?? EmptyState() }
     public static var current: State { stack.last ?? EmptyState() }
     
+    public static var last: State {
+        guard stack.count > 1 else { return EmptyState() }
+        return stack[stack.count - 2]
+    }
+    
     //MARK: - Methods
     
     public static func push(_ s: State) {

@@ -16,6 +16,7 @@ extension State {
     //MARK: Computed Properties
     
     public var name: String { String(describing: Self.self) }
+    public var isEmpty: Bool { controls.isEmpty }
     
     //MARK: Default Implementation
     
