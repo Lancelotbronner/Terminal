@@ -1,8 +1,12 @@
+import Foundation
 
 extension Interpreter {
     
     //MARK: Default Commands
     
-    private static let cmd_help = Command("help", "", Interpreter.help)
+    public static let gBase = CommandGroup("", cExit, cHelp)
+    
+    public static let cExit = Command("exit", "") { exit(EXIT_SUCCESS) }
+    public static let cHelp = Command("help", "", Interpreter.help)
     
 }

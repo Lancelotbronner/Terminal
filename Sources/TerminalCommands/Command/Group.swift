@@ -38,6 +38,7 @@ public final class CommandGroup {
     //MARK: Display
     
     func displayTitle() {
+        guard !title.isEmpty else { return }
         Interpreter.writeln("\n[ \(title) ]\n") {
             Terminal.write(design: "\n[", color: .cyan)
             Terminal.write(design: " \(title) ", color: .lightCyan, style: .bold)
