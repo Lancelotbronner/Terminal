@@ -34,6 +34,11 @@ public final class StateMachine {
         sync()
     }
     
+    @inlinable
+    public static func push(_ S: State.Type) {
+        push(S.init())
+    }
+    
     public static func pop() {
         remove()
         sync()
@@ -56,9 +61,19 @@ public final class StateMachine {
         push(s)
     }
     
+    @inlinable
+    public static func set(_ S: State.Type) {
+        set(S.init())
+    }
+    
     public static func set(root s: State) {
         clear()
         push(s)
+    }
+    
+    @inlinable
+    public static func set(root S: State.Type) {
+        set(root: S.init())
     }
     
     //MARK: - Utilities

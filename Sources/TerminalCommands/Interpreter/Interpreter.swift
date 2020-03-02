@@ -40,6 +40,13 @@ public final class Interpreter {
     @inlinable
     public static func load(commands: Command...) { load(commands: commands) }
     
+    public static func help() {
+        for group in groups {
+            group.displayHelp()
+            print()
+        }
+    }
+    
     //MARK: Private Methods
     
     private static func ask() -> String {
