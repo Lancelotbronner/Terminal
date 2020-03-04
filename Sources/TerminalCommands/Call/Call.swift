@@ -53,17 +53,31 @@ extension Command {
         }
 
         /// Gets two arguments from the call
-        func double(final f: Bool = true) throws -> (Argument, Argument) {
+        public func double(final f: Bool = true) throws -> (Argument, Argument) {
             if f { try assert(exactly: 2) }
             else { try assert(minimum: 2) }
             return (try next(), try next())
         }
 
         /// Gets three arguments from the call
-        func triple(final f: Bool = true) throws -> (Argument, Argument, Argument) {
+        public func triple(final f: Bool = true) throws -> (Argument, Argument, Argument) {
             if f { try assert(exactly: 3) }
             else { try assert(minimum: 3) }
             return (try next(), try next(), try next())
+        }
+        
+        /// Gets four arguments from the call
+        public func quadruple(final f: Bool = true) throws -> (Argument, Argument, Argument, Argument) {
+            if f { try assert(exactly: 4) }
+            else { try assert(minimum: 4) }
+            return (try next(), try next(), try next(), try next())
+        }
+        
+        /// Gets five arguments from the call
+        public func quintuple(final f: Bool = true) throws -> (Argument, Argument, Argument, Argument, Argument) {
+            if f { try assert(exactly: 5) }
+            else { try assert(minimum: 5) }
+            return (try next(), try next(), try next(), try next(), try next())
         }
         
         //MARK: Utilities
