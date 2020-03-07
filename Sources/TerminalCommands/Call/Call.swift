@@ -90,8 +90,16 @@ extension Command {
         
         /// Attempts to get the next argument of the call
         @discardableResult
-        public func next() -> Argument? {
+        public func attemptNext() -> Argument? {
             try? next()
+        }
+        
+        /// Gets all remaining text as a single argument
+        public func last() throws -> Argument {
+            try assertNotEmpty()
+            let tmp = Substring(args.joined())
+            args.removeAll()
+            return Argument(tmp)
         }
         
     }
