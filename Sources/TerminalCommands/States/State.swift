@@ -6,7 +6,6 @@ public protocol State {
     var name: String { get }
     
     func onEnter()
-    func shouldExit() -> Bool
     func onExit()
 }
 
@@ -14,13 +13,14 @@ extension State {
     
     //MARK: Computed Properties
     
-    public var name: String { String(describing: Self.self) }
+    public static var name: String { String(describing: Self.self) }
+    public var name: String { Self.name }
+    
     public var isEmpty: Bool { controls.isEmpty }
     
     //MARK: Default Implementation
     
     public func onEnter() { }
-    public func shouldExit() -> Bool { true }
     public func onExit() { }
     
 }
