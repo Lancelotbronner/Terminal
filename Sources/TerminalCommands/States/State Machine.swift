@@ -33,15 +33,24 @@ public final class StateMachine {
     
     //MARK: - Methods
     
+    public static func run(starting with: State) {
+        push(with)
+        while true {
+            Interpreter.prompt()
+        }
+    }
+    
+    public static func run(starting with: State, while go: @autoclosure () -> Bool) {
+        push(with)
+        while go() {
+            Interpreter.prompt()
+        }
+    }
+    
     public static func push(_ s: State) {
         stack.append(s)
         s.onEnter()
         sync()
-    }
-    
-    @inlinable
-    public static func push(_ S: State.Type) {
-        push(S.init())
     }
     
     public static func pop() {
@@ -66,19 +75,9 @@ public final class StateMachine {
         push(s)
     }
     
-    @inlinable
-    public static func set(_ S: State.Type) {
-        set(S.init())
-    }
-    
     public static func set(root s: State) {
         clear()
         push(s)
-    }
-    
-    @inlinable
-    public static func set(root S: State.Type) {
-        set(root: S.init())
     }
     
     //MARK: - Utilities

@@ -5,9 +5,8 @@ public protocol State {
     var controls: [CommandGroup] { get }
     var name: String { get }
     
-    init()
-    
     func onEnter()
+    func shouldExit() -> Bool
     func onExit()
 }
 
@@ -21,6 +20,7 @@ extension State {
     //MARK: Default Implementation
     
     public func onEnter() { }
+    public func shouldExit() -> Bool { true }
     public func onExit() { }
     
 }
