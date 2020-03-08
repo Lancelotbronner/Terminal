@@ -80,7 +80,7 @@ extension Command {
             return (try next(), try next(), try next(), try next(), try next())
         }
         
-        //MARK: Utilities
+        //MARK: Next
 
         /// Gets the next argument of the call
         public func next() throws -> Argument {
@@ -94,10 +94,12 @@ extension Command {
             try? next()
         }
         
-        /// Gets all remaining text as a single argument
-        public func last() throws -> Argument {
+        /// Combines all remaining arguments into a single one
+        ///
+        /// *Multiple spaces are lost
+        public func all() throws -> Argument {
             try assertNotEmpty()
-            let tmp = Substring(args.joined())
+            let tmp = Substring(args.joined(separator: " "))
             args.removeAll()
             return Argument(tmp)
         }
