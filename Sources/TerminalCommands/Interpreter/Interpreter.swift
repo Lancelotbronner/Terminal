@@ -41,6 +41,7 @@ public final class Interpreter {
     public static func load(commands: Command...) { load(commands: commands) }
     
     public static func help() {
+        print()
         for group in groups {
             group.displayHelp()
             print()
