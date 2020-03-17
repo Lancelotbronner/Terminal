@@ -11,7 +11,7 @@ extension Command {
         //MARK: Computed Properties
         
         /// Wether the call has ran out of arguments
-        var isAtEnd: Bool { args.isEmpty }
+        public var isEmpty: Bool { args.isEmpty }
         
         //MARK: Initialization
         
@@ -23,12 +23,12 @@ extension Command {
         
         /// Makes sure there are no arguments left in the call
         public func assertEmpty() throws {
-            guard isAtEnd else { throw Errors.expectedNoArguments }
+            guard isEmpty else { throw Errors.expectedNoArguments }
         }
         
         /// Makes sure there are arguments left in the call
         public func assertNotEmpty() throws {
-            guard !isAtEnd else { throw Errors.expectedArgument }
+            guard !isEmpty else { throw Errors.expectedArgument }
         }
 
         /// Makes sure there are exactly `n` arguments left in the call
