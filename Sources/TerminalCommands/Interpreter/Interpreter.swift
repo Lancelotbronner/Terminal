@@ -40,11 +40,19 @@ public final class Interpreter {
     @inlinable
     public static func load(commands: Command...) { load(commands: commands) }
     
+    public static func help() {
+        print()
+        for group in groups {
+            group.displayHelp()
+            print()
+        }
+    }
+    
     //MARK: Private Methods
     
     private static func ask() -> String {
         write("\(_prompt) ") {
-            Terminal.write(design: "\(_prompt)", color: .magenta, style: .bold)
+            Terminal.write(design: "\(_prompt) ", color: .magenta, style: .bold)
         }
         
         if _usingRichText {

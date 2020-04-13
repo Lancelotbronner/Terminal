@@ -26,7 +26,12 @@ public final class StateMachine {
     public static var root: State { stack.first ?? EmptyState() }
     public static var current: State { stack.last ?? EmptyState() }
     
-    //MARK: - Methods
+    public static var last: State {
+        guard stack.count > 1 else { return EmptyState() }
+        return stack[stack.count - 2]
+    }
+    
+    //MARK: Accessors
     
     public static func push(_ s: State) {
         stack.append(s)
@@ -59,6 +64,26 @@ public final class StateMachine {
     public static func set(root s: State) {
         clear()
         push(s)
+    }
+    
+    //MARK: - Methods
+    
+    public static func run(starting with: State) {
+        push(with)
+        while true {
+            Interpreter.prompt()
+        }
+    }
+    
+    public static func run(starting with: State, while go: @autoclosure () -> Bool) {
+        push(with)
+        while go() {
+            Interpreter.prompt()
+        }
+    }
+    
+    public static func reloadCommands() {
+        Interpreter.load(commands: current.controls)
     }
     
     //MARK: - Utilities

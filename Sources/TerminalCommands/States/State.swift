@@ -5,8 +5,6 @@ public protocol State {
     var controls: [CommandGroup] { get }
     var name: String { get }
     
-    init()
-    
     func onEnter()
     func onExit()
 }
@@ -15,7 +13,10 @@ extension State {
     
     //MARK: Computed Properties
     
-    public var name: String { String(describing: Self.self) }
+    public static var name: String { String(describing: Self.self) }
+    public var name: String { Self.name }
+    
+    public var isEmpty: Bool { controls.isEmpty }
     
     //MARK: Default Implementation
     
