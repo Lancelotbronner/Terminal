@@ -7,12 +7,10 @@ let package = Package(
     name: "Terminal",
     products: [
         .library(name: "Terminal", targets: ["Terminal"]),
-        .library(name: "TerminalUI", targets: ["Terminal", "TerminalUI"]),
-        .library(name: "TerminalCommands", targets: ["Terminal", "TerminalCommands"]),
+		.library(name: "TerminalApp", targets: ["Terminal", "TerminalApp"]),
     ],
     targets: [
         .target(name: "Terminal"),
-        .target(name: "TerminalUI", dependencies: ["Terminal"]),
-        .target(name: "TerminalCommands", dependencies: ["Terminal"]),
+		.target(name: "TerminalApp", dependencies: ["Terminal"]),
     ]
 )
