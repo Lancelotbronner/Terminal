@@ -47,7 +47,8 @@ public struct Output {
         print(isIndentationEnabled ? indent + str : str, terminator: "")
     }
 	
-    public static func writeln(_ str: String) {
+    public static func writeln(_ str: String = "") {
+		guard !str.isEmpty else { return print("") }
         print(isIndentationEnabled ? indent + str : str)
     }
     

@@ -5,21 +5,33 @@
 //  Created by Christophe Bronner on 2020-10-11.
 //
 
+import Terminal
+
 //MARK: - Interpreter
 
-public struct Interpreter<SourceOfTruth> {
+public struct Interpreter {
 	
 	//MARK: Properties
 	
 	public var configuration: Configuration
 	
-	private var defaultGroup: Group<SourceOfTruth>?
-	private var groups: [Group<SourceOfTruth>] = []
+	internal private(set) var defaultGroup: Group?
+	internal private(set) var namedGroups: [Group] = []
+	
+	private lazy var help = generateHelp()
 	
 	//MARK: Computed Properties
 	
+	internal var groups: [Group] {
+		var list = namedGroups
+		if let tmp = defaultGroup {
+			list.append(tmp)
+		}
+		return list
+	}
+	
 	public var isEmpty: Bool {
-		groups.isEmpty && defaultGroup == nil
+		namedGroups.isEmpty && defaultGroup == nil
 	}
 	
 	//MARK: Initialization
@@ -31,7 +43,7 @@ public struct Interpreter<SourceOfTruth> {
 	//MARK: Interpret
 	
 	@discardableResult
-	public func interpret(_ raw: String, on owner: inout SourceOfTruth) throws -> Bool {
+	public mutating func interpret(_ raw: String) throws -> Bool {
 		let components = raw
 			.split(separator: " ", maxSplits: 1)
 			.map(String.init)
@@ -52,23 +64,33 @@ public struct Interpreter<SourceOfTruth> {
 			return false
 		}
 		
-		try use.execute(using: &call, on: &owner)
+		try use.execute(using: &call)
 		
 		return true
+	}
+	
+	public func handle<T>(_ f: () throws -> T) -> T? {
+		do { return try f() }
+		catch {
+			"\(error)"
+				.foreground(.red)
+				.outputln()
+		}
+		return nil
 	}
 	
 	//MARK: Manipulation
 	
 	public mutating func clear() {
 		defaultGroup = nil
-		groups = []
+		namedGroups = []
 	}
 	
-	public mutating func register(_ group: Group<SourceOfTruth>) {
-		groups.append(group)
+	public mutating func register(_ group: Group) {
+		namedGroups.append(group)
 	}
 	
-	public mutating func register(_ command: Command<SourceOfTruth>) {
+	public mutating func register(_ command: Command) {
 		if defaultGroup == nil {
 			defaultGroup = Group("")
 		}
@@ -77,19 +99,19 @@ public struct Interpreter<SourceOfTruth> {
 	
 	//MARK: Operators
 	
-	public static func +=(lhs: inout Interpreter, rhs: Group<SourceOfTruth>) {
+	public static func +=(lhs: inout Interpreter, rhs: Group) {
 		lhs.register(rhs)
 	}
 	
-	public static func +=(lhs: inout Interpreter, rhs: Command<SourceOfTruth>) {
+	public static func +=(lhs: inout Interpreter, rhs: Command) {
 		lhs.register(rhs)
 	}
 	
 	//MARK: Utilities
 	
-	private func command(for keyword: String) -> Command<SourceOfTruth>? {
+	private mutating func command(for keyword: String) -> Command? {
 		switch keyword {
-		case "help": return nil // TODO: Return help command
+		case "help": return help
 		default: break
 		}
 		
@@ -97,10 +119,6 @@ public struct Interpreter<SourceOfTruth> {
 			if let command = group.command(for: keyword) {
 				return command
 			}
-		}
-		
-		if let command = defaultGroup?.command(for: keyword) {
-			return command
 		}
 		
 		return nil

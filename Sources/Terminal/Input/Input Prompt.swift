@@ -9,26 +9,30 @@ extension Input {
     
     //MARK: Value
     
-    public static func prompt<T: LosslessStringConvertible>() -> T {
-        prompt(map: T.init)
+    public static func read<T: LosslessStringConvertible>() -> T {
+        read(map: T.init)
     }
     
-    public static func prompt(_ choices: [String]) -> String {
-        prompt(until: { choices.contains($0) })
+    public static func read(from choices: [String]) -> String {
+        read(until: { choices.contains($0) })
     }
+	
+	public static func read(from choices: String...) -> String {
+		read(from: choices)
+	}
     
     //MARK: Conditionals
     
-    public static func prompt(until condition: (String) -> Bool) -> String {
+    public static func read(until condition: (String) -> Bool) -> String {
         while true {
-            let str = prompt()
+            let str = readln()
             if condition(str) { return str }
         }
     }
     
-    public static func prompt<T>(map function: (String) -> T?) -> T {
+    public static func read<T>(map function: (String) -> T?) -> T {
         var tmp: T?
-        while tmp == nil { tmp = function(prompt()) }
+        while tmp == nil { tmp = function(readln()) }
         return tmp!
     }
     

@@ -8,9 +8,13 @@ let package = Package(
     products: [
         .library(name: "Terminal", targets: ["Terminal"]),
 		.library(name: "TerminalApp", targets: ["Terminal", "TerminalApp"]),
+		
+		.executable(name: "TestApp", targets: ["TestApp"]),
     ],
     targets: [
         .target(name: "Terminal"),
 		.target(name: "TerminalApp", dependencies: ["Terminal"]),
+		
+		.target(name: "TestApp", dependencies: ["TerminalApp"]),
     ]
 )

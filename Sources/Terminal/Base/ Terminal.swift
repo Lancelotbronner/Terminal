@@ -5,7 +5,7 @@
 //  Created by Christophe Bronner on 11/06/2020.
 //
 
-import Darwin
+import Foundation
 
 //MARK: - Terminal
 
@@ -15,7 +15,7 @@ public struct Terminal {
     //MARK: Configuration
     
     /// Set to false to prevent styling, for use in Xcode's console for example.
-    public static var isStyleEnabled = true
+	public static var isStyleEnabled = ProcessInfo.processInfo.environment["XCODE"] == nil
     
     //MARK: Echo Mode
     

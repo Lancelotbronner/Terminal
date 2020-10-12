@@ -15,7 +15,7 @@ extension Interpreter {
 		//MARK: Typealiases
 		
 		public typealias NoCommandsFoundHandler = (_ keyword: String) -> Void
-		public typealias WrongUsageHandler = (_ command: Command<SourceOfTruth>) -> Void
+		public typealias WrongUsageHandler = (_ command: Command) -> Void
 		
 		//MARK: Properties
 		
@@ -67,7 +67,7 @@ extension Interpreter {
 			_noCommandsFound(keyword)
 		}
 		
-		internal func handleWrongUsage(command: Command<SourceOfTruth>) {
+		internal func handleWrongUsage(command: Command) {
 			_wrongUsage(command)
 		}
 		

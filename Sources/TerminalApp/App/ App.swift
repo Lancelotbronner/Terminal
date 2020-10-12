@@ -5,20 +5,22 @@
 //  Created by Christophe Bronner on 2020-10-11.
 //
 
-import Terminal
-
 //MARK: - App Protocol
 
 public protocol App {
+	associatedtype SourceOfTruth
+	
+	/// The program's state
+	var sourceOfTruth: SourceOfTruth { get set }
 	
 	/// Initializes the application. The stack isn't available yet.
 	init() throws
 	
 	/// Called before anything else when the application starts
-	func start()
+	func start() throws
 	
 	/// Called when the root `State` is popped just before the program exits
-	func end()
+	func end() throws
 	
 }
 
@@ -26,18 +28,14 @@ extension App {
 	
 	//MARK: Defaults
 	
-	public func end() { }
+	public func start() throws { }
+	public func end() throws { }
 	
 	//MARK: Properties
 	
-	internal var container: Container<Self> {
+	public private(set) var container: Container<Self> {
 		get { TerminalApp.container() }
 		set { TerminalApp.container(set: newValue) }
-	}
-	
-	public var stack: Stack<Self> {
-		get { container.stack }
-		set { container.stack = newValue }
 	}
 	
 	//MARK: Methods
@@ -51,22 +49,12 @@ extension App {
 	
 	public static func main() throws {
 		var app = try Self.init()
-		app.container = Container<Self>(app) { app = $0 }
+		app.container = Container<Self>(app)
 		app.run()
 	}
 	
 	private mutating func run() {
-		start()
-		while container.isRunning {
-			let input = Input.prompt()
-			do { try container.interpreter.interpret(input, on: &self) }
-			catch {
-				"\(error)"
-					.foreground(.red)
-					.outputln()
-			}
-		}
-		end()
+		container.run()
 	}
 	
 }

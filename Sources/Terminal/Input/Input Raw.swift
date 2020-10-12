@@ -28,11 +28,11 @@ public struct Input {
     
     //MARK: Wait for Input
     
-    public static func key() -> Key {
+    public static func read() -> Key {
         .init(code())
     }
     
-    public static func prompt() -> String {
+    public static func readln() -> String {
         Terminal.withEcho { readLine() ?? "" }
     }
     

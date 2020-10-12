@@ -9,18 +9,18 @@ import Foundation
 
 //MARK: - Usage
 
-public struct Usage<SourceOfTruth>: Equatable {
+public struct Usage: Equatable {
 	
 	//MARK: Typealiases
 	
-	public typealias Action = (inout SourceOfTruth, inout Call) throws -> Void
-	public typealias QuickAction = (inout SourceOfTruth) throws -> Void
+	public typealias Action = (inout Call) throws -> Void
+	public typealias QuickAction = () throws -> Void
 	
 	//MARK: Properties
 	
-	private let summary: String?
+	internal let summary: String?
 	private let action: Action
-	private var arguments: [Argument]
+	internal private(set) var arguments: [Argument]
 	
 	//MARK: Computed Properties
 	
@@ -51,7 +51,7 @@ public struct Usage<SourceOfTruth>: Equatable {
 	}
 	
 	public init(_ description: String, action: @escaping QuickAction) {
-		self.init(raw: description, []) { owner, _ in try action(&owner) }
+		self.init(raw: description, []) { _ in try action() }
 	}
 	
 	//MARK: Manipulation
@@ -88,13 +88,13 @@ public struct Usage<SourceOfTruth>: Equatable {
 	
 	//MARK: Methods
 	
-	internal func execute(using call: inout Call, on owner: inout SourceOfTruth) throws {
-		try action(&owner, &call)
+	internal func execute(using call: inout Call) throws {
+		try action(&call)
 	}
 	
 	internal func verify(using call: inout Call) -> Bool {
 		if call.isEmpty && arguments.isEmpty {
-			return false
+			return true
 		}
 		
 		if let min = minimumNumberOfRealArguments, call.args.count < min {
@@ -133,7 +133,7 @@ public struct Usage<SourceOfTruth>: Equatable {
 		lhs.add(rhs)
 	}
 	
-	public static func ==(lhs: Usage<SourceOfTruth>, rhs: Usage<SourceOfTruth>) -> Bool {
+	public static func ==(lhs: Usage, rhs: Usage) -> Bool {
 		lhs.arguments == rhs.arguments
 	}
 	

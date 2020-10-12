@@ -7,13 +7,13 @@
 
 //MARK: - Command Group
 
-public struct Group<SourceOfTruth> {
+public struct Group {
 	
 	//MARK: Properties
 	
-	private let name: String
-	private let summary: String?
-	private var commands: [Command<SourceOfTruth>] = []
+	internal let name: String
+	internal let summary: String?
+	internal private(set) var commands: [Command] = []
 	
 	//MARK: Initialization
 	
@@ -26,25 +26,25 @@ public struct Group<SourceOfTruth> {
 	
 	//MARK: Methods
 	
-	public func with(command: Command<SourceOfTruth>) -> Group {
+	public func with(command: Command) -> Group {
 		var tmp = self
 		tmp.add(command: command)
 		return tmp
 	}
 	
-	internal func command(for keyword: String) -> Command<SourceOfTruth>? {
+	internal func command(for keyword: String) -> Command? {
 		commands.first { $0.is(keyword) }
 	}
 	
 	//MARK: Operators
 	
-	public static func +=(lhs: inout Group, rhs: Command<SourceOfTruth>) {
+	public static func +=(lhs: inout Group, rhs: Command) {
 		lhs.add(command: rhs)
 	}
 	
 	//MARK: Utilities
 	
-	private mutating func add(command: Command<SourceOfTruth>) {
+	private mutating func add(command: Command) {
 		assert(!commands.contains(command), "Cannot have duplicate commands in Group")
 		commands.append(command)
 	}
