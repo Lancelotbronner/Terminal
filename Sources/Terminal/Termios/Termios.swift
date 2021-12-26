@@ -32,13 +32,39 @@ public struct Termios {
 	
 	@usableFromInline internal var underlying: termios
 	
+	//MARK: Computed Properties
+	
+	/// Describes the basic terminal input control
+	@inlinable public var input: Input {
+		get { Input(of: underlying) }
+		set { newValue.apply(to: &underlying) }
+	}
+	
+	/// Describes the basic terminal output control
+	@inlinable public var output: Output {
+		get { Output(of: underlying) }
+		set { newValue.apply(to: &underlying) }
+	}
+	
+	/// Describes the basic terminal hardware control
+	@inlinable public var control: Control {
+		get { Control(of: underlying) }
+		set { newValue.apply(to: &underlying) }
+	}
+	
+	/// Describes the control of various functions
+	@inlinable public var local: Local {
+		get { Local(of: underlying) }
+		set { newValue.apply(to: &underlying) }
+	}
+	
 	//MARK: Initialization
 	
 	@inlinable public init(wrap underlying: termios) {
 		self.underlying = underlying
 	}
 	
-	@usableFromInline internal init() {
+	@usableFromInline internal init() { // TODO: Error handling
 		underlying = termios()
 		tcgetattr(STDIN_FILENO, &underlying)
 	}
@@ -51,34 +77,30 @@ public struct Termios {
 		apply(mode: backup, when: schedule)
 	}
 	
-	@usableFromInline internal static func apply(mode: termios, when schedule: UpdateScheduling) {
-		withUnsafePointer(to: mode) { pointer in
+	@usableFromInline internal static func apply(mode: termios, when schedule: UpdateScheduling = .now) {
+		_ = withUnsafePointer(to: mode) { pointer in // TODO: Error handling
 			tcsetattr(STDIN_FILENO, schedule.rawValue, pointer)
 		}
 	}
 	
 	//MARK: Methods
 	
-	@inlinable public func store() {
-		Termios.backup = underlying
-	}
-	
 	@inlinable public func apply(when schedule: UpdateScheduling = .now) {
-		Termios.current.store()
+		Termios.backup = underlying
 		Termios.apply(mode: underlying, when: schedule)
 	}
 	
 	//MARK: Utilities
 	
-	@usableFromInline func retrieve(option: Int32, from flags: KeyPath<termios, tcflag_t>) -> Bool {
-		underlying[keyPath: flags] & tcflag_t(option) == tcflag_t(option)
+	@usableFromInline static func retrieve(_ option: Int32, from flags: tcflag_t) -> Bool {
+		flags & tcflag_t(option) == tcflag_t(option)
 	}
 	
-	@usableFromInline mutating func configure(option: Int32, to newValue: Bool, into flags: WritableKeyPath<termios, tcflag_t>) {
+	@usableFromInline static func configure(_ option: Int32, to newValue: Bool, into flags: inout tcflag_t) {
 		if newValue {
-			underlying[keyPath: flags] |= tcflag_t(option)
+			flags |= tcflag_t(option)
 		} else {
-			underlying[keyPath: flags] &= ~tcflag_t(option)
+			flags &= ~tcflag_t(option)
 		}
 	}
 	
