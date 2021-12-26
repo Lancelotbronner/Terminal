@@ -9,26 +9,23 @@ extension String {
     
     //MARK: Reset
     
-    @inline(__always)
     public func normal() -> String {
         wrap(inactive: Constants.RESET_ALL)
     }
     
     //MARK: Weight
     
-    public func weight(_ weight: Style.Weight) -> String {
+    @inlinable public func weight(_ weight: Style.Weight) -> String {
         switch weight {
         case .bold: return bold()
         case .dim: return dim()
         }
     }
     
-    @inline(__always)
     public func bold(_ active: Bool = true) -> String {
         wrap(Constants.BOLD, Constants.RESET_BOLD, active)
     }
     
-    @inline(__always)
     public func dim(_ active: Bool = true) -> String {
         wrap(Constants.DIM, Constants.RESET_DIM, active)
     }
@@ -297,5 +294,13 @@ extension String {
         guard Terminal.isStyleEnabled else { return self }
         return active ? wrap(active: set, reset) : wrap(inactive: reset)
     }
+	
+	@usableFromInline func csi(_ body: String, end: String = "") -> String {
+		"\u{1b}[\(body)\(end)"
+	}
+	
+	@usableFromInline func csi(_ components: String..., end: String = "") -> String {
+		csi(components.joined(separator: ";"))
+	}
     
 }

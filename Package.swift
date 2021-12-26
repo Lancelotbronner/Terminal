@@ -4,17 +4,24 @@
 import PackageDescription
 
 let package = Package(
-    name: "Terminal",
-    products: [
-        .library(name: "Terminal", targets: ["Terminal"]),
+	name: "Terminal",
+	products: [
+		.library(name: "Terminal", targets: ["Terminal"]),
 		.library(name: "TerminalApp", targets: ["Terminal", "TerminalApp"]),
 		
-		.executable(name: "TestApp", targets: ["TestApp"]),
-    ],
-    targets: [
-        .target(name: "Terminal"),
+			.executable(name: "TestApp", targets: ["TestApp"]),
+	],
+	targets: [
+		.target(name: "Termios"),
+		
+			.target(
+				name: "Terminal",
+				dependencies: [
+					.target(name: "Termios")
+				]),
+		
 		.target(name: "TerminalApp", dependencies: ["Terminal"]),
 		
-		.target(name: "TestApp", dependencies: ["TerminalApp"]),
-    ]
+			.target(name: "TestApp", dependencies: ["TerminalApp"]),
+	]
 )

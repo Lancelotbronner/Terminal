@@ -11,28 +11,16 @@ import Darwin
 
 public struct Termios {
 	
-	//MARK: Typealiases
-	
-	@usableFromInline typealias Retrieve = (Int32, KeyPath<termios, tcflag_t>) -> Bool
-	@usableFromInline typealias Configure = (Int32, Bool, WritableKeyPath<termios, tcflag_t>) -> Void
-	
-	//MARK: Static Properties
-	
-	@usableFromInline internal static var backup: termios = {
-		print("INITIAL")
-		
-		// Register restore on exit
-		atexit { Termios.apply(mode: initial, when: .flush) }
-		
-		// Return (lazy-initialized) initial configuration
-		return initial
-	}()
-	
 	//MARK: Properties
 	
-	@usableFromInline internal var underlying: termios
+	@usableFromInline var underlying: termios
 	
 	//MARK: Computed Properties
+	
+	/// The underlying raw value
+	@inlinable public var rawValue: termios {
+		underlying
+	}
 	
 	/// Describes the basic terminal input control
 	@inlinable public var input: Input {
@@ -60,34 +48,28 @@ public struct Termios {
 	
 	//MARK: Initialization
 	
-	@inlinable public init(wrap underlying: termios) {
+	/// Wraps an existing `termios` configuration
+	@inlinable public init(_ underlying: termios) {
 		self.underlying = underlying
 	}
 	
-	@usableFromInline internal init() { // TODO: Error handling
+	@usableFromInline init() { // TODO: Error handling
 		underlying = termios()
 		tcgetattr(STDIN_FILENO, &underlying)
 	}
 	
-	@inlinable public static var current: Termios { .init() }
-	
-	//MARK: Static Methods
-	
-	@inlinable public static func restore(when schedule: UpdateScheduling = .now) {
-		apply(mode: backup, when: schedule)
-	}
-	
-	@usableFromInline internal static func apply(mode: termios, when schedule: UpdateScheduling = .now) {
-		_ = withUnsafePointer(to: mode) { pointer in // TODO: Error handling
-			tcsetattr(STDIN_FILENO, schedule.rawValue, pointer)
-		}
+	/// Retrieves the current configuration of STDIN
+	@inlinable public static var current: Termios {
+		Termios()
 	}
 	
 	//MARK: Methods
 	
+	/// Applies the configuration to STDIN
 	@inlinable public func apply(when schedule: UpdateScheduling = .now) {
-		Termios.backup = underlying
-		Termios.apply(mode: underlying, when: schedule)
+		_ = withUnsafePointer(to: underlying) { pointer in // TODO: Error handling
+			tcsetattr(STDIN_FILENO, schedule.rawValue, pointer)
+		}
 	}
 	
 	//MARK: Utilities
@@ -126,5 +108,3 @@ public struct Termios {
 	}
 	
 }
-
-private let initial = Termios.current.underlying

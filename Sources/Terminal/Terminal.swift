@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Termios
 
 //MARK: - Terminal
 
@@ -27,9 +28,10 @@ public struct Terminal {
 	
 	/// Executes a block with a specific configuration, then returns to the previous configuration
 	@inlinable public static func with<T>(configuration mode: Termios, do block: () -> T) -> T {
+		let backup = Termios.current
 		mode.apply()
 		let tmp = block()
-		Termios.restore()
+		backup.apply()
 		return tmp
 	}
     
