@@ -13,7 +13,7 @@ public final class Container<Program> where Program: App {
 	
 	//MARK: Properties
 	
-	public var prompt = ">".magentaForeground()
+	public var prompt = ">".asMagenta
 	
 	internal var program: Program
 	internal var interpreter: Interpreter

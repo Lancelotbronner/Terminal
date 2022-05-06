@@ -5,7 +5,7 @@
 //  Created by Christophe Bronner on 2021-12-25.
 //
 
-import Darwin
+import Darwin.POSIX.termios
 
 //MARK: - Termios Output
 
@@ -14,7 +14,7 @@ extension Termios {
 		
 		//MARK: Properties
 		
-		@usableFromInline var underlying: tcflag_t
+		@usableFromInline var underlying: TermiosFlags
 		
 		//MARK: Computed Properties
 		

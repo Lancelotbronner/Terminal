@@ -7,4 +7,6 @@
 
 import Terminal
 
-try Program.main()
+print("tmp".asCyan.onLightRed)
+
+//try Program.main()

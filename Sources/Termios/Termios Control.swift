@@ -5,7 +5,7 @@
 //  Created by Christophe Bronner on 2021-12-26.
 //
 
-import Darwin
+import Darwin.POSIX.termios
 
 //MARK: - Termios Control
 
@@ -14,11 +14,66 @@ extension Termios {
 		
 		//MARK: Properties
 		
-		@usableFromInline var underlying: tcflag_t
+		@usableFromInline var underlying: TermiosFlags
 		
 		//MARK: Computed Properties
 		
+		/// Specifies the byte size in bits for both transmission and reception.
+		///
+		/// This size does not include the parity bit, if any.  If CSTOPB is set, two stop bits are used, otherwise one stop bit.  For example, at 110 baud, two stop bits are normally used.
+		@inlinable public var size: CharacterSize {
+			get {
+				let masked = Int32(underlying & TermiosFlags(CSIZE))
+				guard let tmp = CharacterSize(rawValue: masked) else {
+					fatalError("Unknown character size value \(masked)")
+				}
+				return tmp
+			}
+			set {
+				underlying &= TermiosFlags(~CSIZE)
+				underlying |= TermiosFlags(newValue.rawValue)
+			}
+		}
 		
+		/// Two stop bits are used instead of one stop bit.
+		///
+		/// For example, at 110 baud, two stop bits are normally used.
+		@inlinable public var sendTwoStopBits: Bool {
+			get { retrieve(CSTOPB) }
+			set { configure(CSTOPB, to: newValue) }
+		}
+		
+		/// Wether parity generation and detection are enabled
+		///
+		/// If parity is enabled, ``parity``controls wether even or odd parity is used.
+		@inlinable public var isParityEnabled: Bool {
+			get { retrieve(PARENB) }
+			set { configure(PARENB, to: newValue) }
+		}
+		
+		/// Specifies how parity is set
+		@inlinable public var parity: Parity {
+			get { Parity(rawValue: retrieve(PARODD)) }
+			set { configure(PARODD, to: newValue.rawValue) }
+		}
+		
+		/// Wether to receive characters.
+		///
+		/// Not all hardware supports this bit. In fact, this flag is pretty silly and if it were not part of the termios specification it would be omitted.
+		@inlinable public var isReadEnabled: Bool {
+			get { retrieve(CREAD) }
+			set { configure(CREAD, to: newValue) }
+		}
+		
+		// TODO: HUPCL
+		// TODO: CLOCAL
+		// TODO: CRTS_IFLOW
+		// TODO: MDMBUF
+		
+		/// The total number of bits used per transmission and reception
+		@inlinable public var bitsPerCharacter: Int {
+			size.bits + (sendTwoStopBits ? 2 : 1) + (isParityEnabled ? 1 : 0)
+		}
 		
 		//MARK: Initialization
 		

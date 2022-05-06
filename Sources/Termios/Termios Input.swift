@@ -5,7 +5,7 @@
 //  Created by Christophe Bronner on 2021-12-24.
 //
 
-import Darwin
+import Darwin.POSIX.termios
 
 //MARK: - Termios Input
 
@@ -14,7 +14,7 @@ extension Termios {
 		
 		//MARK: Properties
 		
-		@usableFromInline var underlying: tcflag_t
+		@usableFromInline var underlying: TermiosFlags
 		
 		//MARK: Computed Properties
 		
@@ -67,8 +67,9 @@ extension Termios {
 		/// Enables input parity checking
 		///
 		/// If this is `false`, it allows output parity generation without input parity errors. The enabling of input parity checking is independent of the enabling
-		/// of parity checking in the control modes field. (See ``CONTROL FLAGS``) While the control modes may dictate that the hardware recognizes the parity bit, the terminal special
-		/// file does not check whether this bit is set correctly.
+		/// of parity checking in the control modes field. (See ``Termios/Control-swift.struct``)
+		///
+		/// While the control modes may dictate that the hardware recognizes the parity bit, the terminal special file does not check whether this bit is set correctly.
 		@inlinable public var checkParity: Bool {
 			get { retrieve(INPCK) }
 			set { configure(INPCK, to: newValue) }
@@ -76,7 +77,8 @@ extension Termios {
 		
 		/// Strips valid input bytes to 7 bits, if this is `false` the complete byte is processed
 		///
-		///  - Warning: Do not enable this for pseudoterminals, since it will make the terminal unusable. If you strip the first bit off of EBCDIC characters, you destroy all printable EBCDIC characters.
+		///  - Warning: Do not enable this for pseudoterminals, since it will make the terminal unusable. If you strip the first bit off of EBCDIC characters,
+		///  you destroy all printable EBCDIC characters.
 		@inlinable public var strip: Bool {
 			get { retrieve(ISTRIP) }
 			set { configure(ISTRIP, to: newValue) }

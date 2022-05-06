@@ -34,9 +34,9 @@ extension Interpreter {
 			
 			_noCommandsFound = {
 				("Command '"
-					+ $0.foreground(.normal).bold()
+					+ $0.foreground(.default).bold()
 					+ "' does not exist, try '"
-					+ "help".foreground(.normal).bold()
+					+ "help".foreground(.default).bold()
 					+ "' for a list of available commands")
 					.foreground(.red)
 					.outputln()

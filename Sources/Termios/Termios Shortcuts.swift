@@ -5,9 +5,74 @@
 //  Created by Christophe Bronner on 2021-12-26.
 //
 
-import Darwin
+import Darwin.POSIX.termios
 
+//MARK: - Termios Shortcuts
 
+extension Termios {
+	public struct Shortcuts {
+		
+		//MARK: Constants
+		
+		#if os(macOS)
+		@inlinable public static var disabled: cc_t { .max }
+		#elseif os(Linux)
+		@inlinable public static var disabled: cc_t { .zero }
+		#endif
+		
+		//MARK: Properties
+		
+		@usableFromInline var underlying: CC
+		
+		//MARK: Computed Properties
+		
+		@inlinable public var eof: Unicode.Scalar? {
+			get { retrieve(\.eof) }
+			set { configure(\.eof, to: newValue) }
+		}
+		
+		// TODO: VEOL
+		// TODO: VEOL2
+		// TODO: VERASE
+		// TODO: VWERASE
+		// TODO: VKILL
+		// TODO: VREPRINT
+		// TODO: VINTR
+		// TODO: VQUIT
+		// TODO: VSUSP
+		// TODO: VDSUSP
+		// TODO: VSTART
+		// TODO: VSTOP
+		// TODO: VLNEXT
+		// TODO: VDISCARD
+		// TODO: VMIN
+		// TODO: VTIME
+		// TODO: VSTATUS
+		
+		//MARK: Initialization
+		
+		@usableFromInline init(of terminal: termios) {
+			underlying = terminal.c_cc
+		}
+		
+		//MARK: Methods
+		
+		@usableFromInline func apply(to terminal: inout termios) {
+			terminal.c_cc = underlying
+		}
+		
+		@usableFromInline func retrieve(_ option: KeyPath<CC, cc_t>) -> Unicode.Scalar? {
+			let tmp = underlying[keyPath: option] == Shortcuts.disabled ? nil : underlying[keyPath: option]
+			return tmp.map(Unicode.Scalar.init)
+		}
+		
+		@usableFromInline mutating func configure(_ option: WritableKeyPath<CC, cc_t>, to newValue: Unicode.Scalar?) {
+			assert(newValue.map { $0.value < UInt32(UInt8.max) } ?? true, "Character must be ascii (0 to 255), in release mode the value will be truncated")
+			underlying[keyPath: option] = newValue.map(\.value).map(UInt8.init(truncatingIfNeeded:)) ?? Shortcuts.disabled
+		}
+		
+	}
+}
 
 /*
  Special Control Characters

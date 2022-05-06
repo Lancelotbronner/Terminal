@@ -8,27 +8,31 @@
 extension String {
 	
 	//MARK: Padding
-	
-	public func pad(left length: Int, with char: Character = " ") -> String {
+
+	@inlinable public func pad(left length: Int, with char: Character = " ") -> String {
 		guard count < length else { return self }
 		return String(repeating: char, count: length - count) + self
 	}
-	
-	public func pad(right length: Int, with char: Character = " ") -> String {
+
+	@inlinable public func pad(right length: Int, with char: Character = " ") -> String {
 		guard count < length else { return self }
 		return self + String(repeating: char, count: length - count)
 	}
-	
+
 	//MARK: Inline Manipulation
 	
-	public func prefixed(with other: String?) -> String {
+	@inlinable public func prepend(_ other: String) -> String {
+		"\(other)\(self)"
+	}
+
+	@inlinable public func prefixed(with other: String?) -> String {
 		guard let other = other else { return self }
 		return other + self
 	}
-	
-	public func suffixed(with other: String?) -> String {
+
+	@inlinable public func suffixed(with other: String?) -> String {
 		guard let other = other else { return self }
-		return appending(other)
+		return self + other
 	}
 	
 }

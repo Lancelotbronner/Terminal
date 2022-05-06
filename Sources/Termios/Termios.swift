@@ -5,7 +5,7 @@
 //  Created by Christophe Bronner on 2021-12-23.
 //
 
-import Darwin
+import Darwin.POSIX.termios
 
 //MARK: - Termios
 
@@ -46,6 +46,12 @@ public struct Termios {
 		set { newValue.apply(to: &underlying) }
 	}
 	
+	/// Describes the special control characters
+	@inlinable public var shortcuts: Shortcuts {
+		get { Shortcuts(of: underlying) }
+		set { newValue.apply(to: &underlying) }
+	}
+	
 	//MARK: Initialization
 	
 	/// Wraps an existing `termios` configuration
@@ -53,57 +59,39 @@ public struct Termios {
 		self.underlying = underlying
 	}
 	
-	@usableFromInline init() { // TODO: Error handling
+	/// Retrieves the current configuration of the specified file number
+	@inlinable public init(retrieve fileNumber: Int32) {
+		// TODO: Error handling
 		underlying = termios()
-		tcgetattr(STDIN_FILENO, &underlying)
+		tcgetattr(fileNumber, &underlying)
 	}
 	
-	/// Retrieves the current configuration of STDIN
+	/// Retrieves the standard input's current configuration
 	@inlinable public static var current: Termios {
-		Termios()
+		Termios(retrieve: STDIN_FILENO)
 	}
 	
 	//MARK: Methods
 	
 	/// Applies the configuration to STDIN
 	@inlinable public func apply(when schedule: UpdateScheduling = .now) {
-		_ = withUnsafePointer(to: underlying) { pointer in // TODO: Error handling
+		_ = withUnsafePointer(to: underlying) { pointer in
+			// TODO: Error handling
 			tcsetattr(STDIN_FILENO, schedule.rawValue, pointer)
 		}
 	}
 	
 	//MARK: Utilities
 	
-	@usableFromInline static func retrieve(_ option: Int32, from flags: tcflag_t) -> Bool {
-		flags & tcflag_t(option) == tcflag_t(option)
+	@usableFromInline static func retrieve(_ option: Int32, from flags: TermiosFlags) -> Bool {
+		flags & TermiosFlags(option) == TermiosFlags(option)
 	}
 	
-	@usableFromInline static func configure(_ option: Int32, to newValue: Bool, into flags: inout tcflag_t) {
+	@usableFromInline static func configure(_ option: Int32, to newValue: Bool, into flags: inout TermiosFlags) {
 		if newValue {
-			flags |= tcflag_t(option)
+			flags |= TermiosFlags(option)
 		} else {
-			flags &= ~tcflag_t(option)
-		}
-	}
-	
-	//MARK: Update Scheduling Options
-	
-	public enum UpdateScheduling {
-		/// The change should take place immediately.
-		case now
-		
-		/// The change should take place after all output written has been read by the master pseudoterminal. Use this value when changing terminal attributes that affect output.
-		case drain
-		
-		/// The change should take place after all output written has been sent; in addition, all input that has been received but not read should be discarded (flushed) before the change is made.
-		case flush
-		
-		@usableFromInline var rawValue: Int32 {
-			switch self {
-			case .now: return TCSANOW
-			case .drain: return TCSADRAIN
-			case .flush: return TCSAFLUSH
-			}
+			flags &= ~TermiosFlags(option)
 		}
 	}
 	
