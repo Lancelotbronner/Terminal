@@ -3,15 +3,22 @@
 This package aims to aid in the making of Command-Line Applications by providing an API to wrap
 ANSI commands.
 
-The package contains two modules: `Terminal` and `TerminalUI`.
-The later is currently unusable as it is way too experimental
+The package contains a few modules: `Termios`, `ControlSequence`, `Prompt` and `Terminal`. The last one re-exports all previous ones.
 
-*Any help, comments or interest would be welcome!*
+*Any help, comments or suggestions would be welcome!*
+
+## Termios
+
+A swift termios wrapper, with documentation from the man pages.
+
+## ControlSequence
+
+Wraps ANSI sequences, string styling shortcuts, terminal query sequences and parsing, etc.
+
+## Prompt
+
+Alternative to readline, provides a plugin architecture to customize your prompt
 
 ## Terminal
 
-A simple API wrapped in the `Terminal` class to allow using the terminal to it's *(almost)* full power!
-
-## TerminalUI - DO NOT USE
-
-A **very** experimental UI system for the terminal, it aims to be close to SwiftUI.
+Provides convenience APIs for terminal-related things

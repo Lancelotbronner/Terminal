@@ -5,8 +5,9 @@
 //  Created by Christophe Bronner on 2022-03-11.
 //
 
-import Termios
-@_exported import Ansi
+@_exported import Termios
+@_exported import ControlSequence
+@_exported import Prompt
 
 //MARK: - Terminal
 
@@ -16,9 +17,10 @@ public struct Terminal {
 	
 	public static var isStyleEnabled: Bool = {
 		// TODO: Autocheck wether styling should be enabled
+		// - Look for XCODE env variable
 		// - Check wether tty or output
 		// - Check for NO_COLOR env variable
-		true
+		return true
 	}()
 	
 	//MARK: Configuration

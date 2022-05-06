@@ -10,13 +10,14 @@ let package = Package(
 	],
 	targets: [
 		.target(name: "Termios"),
-		.target(name: "EscapeCodes"),
+		.target(name: "ControlSequence"),
+		.target(name: "Prompt"),
 		
 			.target(
 				name: "Terminal",
 				dependencies: [
 					.target(name: "Termios"),
-					.target(name: "EscapeCodes")
+					.target(name: "ControlSequence")
 				]),
 		
 //		.target(name: "TerminalApp", dependencies: ["Terminal"]),
