@@ -5,18 +5,27 @@
 //  Created by Christophe Bronner on 2022-03-11.
 //
 
-@_exported import Termios
-@_exported import ControlSequence
+@_exported import Terminal
 @_exported import Prompt
 
-//MARK: - Terminal
+import Termios
 
-public struct Terminal {
+//MARK: - Console
+
+public struct Console {
 	
-	//MARK: Style
+	//MARK: Capabilities
 	
 	public static var isStyleEnabled: Bool = {
 		// TODO: Autocheck wether styling should be enabled
+		// - Look for XCODE env variable
+		// - Check wether tty or output
+		// - Check for NO_COLOR env variable
+		return true
+	}()
+
+	public static var isRequestEnabled: Bool = {
+		// TODO: Autocheck wether requests should be enabled
 		// - Look for XCODE env variable
 		// - Check wether tty or output
 		// - Check for NO_COLOR env variable
@@ -33,20 +42,12 @@ public struct Terminal {
 	
 	/// Executes a block with a specific configuration, then returns to the previous configuration
 	@inlinable public static func with(configuration mode: Termios, do block: () -> Void) {
-		let backup = Termios.current
-		mode.apply()
-		block()
-		backup.apply()
+		Termios.with(configuration: mode, do: block)
 	}
 	
 	/// Executes a block with a specific configuration, then returns to the previous configuration
 	@inlinable public static func with(configuration mode: (inout Termios) -> Void, do block: () -> Void) {
-		let backup = Termios.current
-		var tmp = backup
-		mode(&tmp)
-		tmp.apply()
-		block()
-		backup.apply()
+		Termios.with(configuration: mode, do: block)
 	}
 	
 }

@@ -5,19 +5,15 @@
 //  Created by Christophe Bronner on 2022-04-24.
 //
 
-//MARK: - Console Style Attribute
+//MARK: - Decoration Attribute
 
-public protocol ConsoleStyleAttribute: Hashable, CustomStringConvertible {
+public protocol ConsoleDecorationAttribute: Hashable, CustomStringConvertible {
 	
 	static var inherited: Self { get }
 	
-	init(_ rawValue: UInt16)
-	
-	var rawValue: UInt16 { get }
-	
 }
 
-extension ConsoleStyleAttribute {
+extension ConsoleDecorationAttribute {
 	
 	//MARK: Computed Properties
 	
@@ -27,26 +23,6 @@ extension ConsoleStyleAttribute {
 	
 	@inlinable public var isConfigured: Bool {
 		!isInherited
-	}
-	
-	//MARK: Methods
-	
-	@usableFromInline func fallback(describe attribute: Self) -> String {
-		switch attribute.rawValue {
-		case 0: return "inherited"
-		default:
-			assertionFailure("Unknown \(Self.self) with raw value \(attribute.rawValue)")
-			return ""
-		}
-	}
-	
-	@usableFromInline func fallback(sequence attribute: Self) -> UInt8? {
-		switch attribute.rawValue {
-		case 0: return nil
-		default:
-			assertionFailure("Unknown \(Self.self) with raw value \(attribute.rawValue)")
-			return nil
-		}
 	}
 	
 	//MARK: Operators
@@ -77,3 +53,34 @@ extension ConsoleStyleAttribute {
 	
 }
 
+//MARK: - Console Decoration Attribute
+
+@usableFromInline protocol _ConsoleDecorationAttribute: ConsoleDecorationAttribute {
+	
+	static var mask: UInt16 { get }
+	
+	init(_ rawValue: UInt16)
+	
+	var rawValue: UInt16 { get }
+	var code: UInt8? { get }
+	
+}
+
+extension _ConsoleDecorationAttribute {
+	
+	//MARK: Computed Properties
+	
+	@inlinable public var description: String {
+		code.map(ControlSequence.SGR(bit8:)) ?? ""
+	}
+	
+	@usableFromInline var fallback: UInt8 {
+		switch rawValue {
+		case 0: return 0
+		default:
+			assertionFailure("Unknown \(Self.self) with raw value \(rawValue)")
+			return 0
+		}
+	}
+	
+}

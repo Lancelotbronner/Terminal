@@ -1,8 +1,15 @@
 import XCTest
-import Ansi
 import Terminal
 
 final class StylingTests: XCTestCase {
+	
+	func testAPI() {
+		let _ = "This text is italics red on a cyan background".red.onCyan.italic
+		let _ = "So is this one but more efficient with its sequence".style(
+			foreground: .red,
+			background: .cyan,
+			italics: .enabled)
+	}
 	
 	func testStyleUnion() {
 		XCTAssertEqual(.inherited | .inherited, ConsoleWeight.inherited)

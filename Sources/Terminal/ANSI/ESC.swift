@@ -27,7 +27,7 @@ extension ControlSequence {
 	public static let HTS = "\(ESC)H"
 	
 	/// `Reverse Index`: Move the cursor one line up scrolling if needed
-	public static let IR = "\(ESC)H"
+	public static let IR = "\(ESC)M"
 
 	/// `Device Control String`: Start of a DCS sequence
 	public static let DCS = "\(ESC)P"

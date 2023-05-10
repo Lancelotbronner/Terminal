@@ -21,11 +21,11 @@ public struct Style {
 	
 	//MARK: Computed Properties
 	
-	@usableFromInline var sequence: [UInt8] {
+	@inlinable public var description: String {
 		var tmp: [UInt8] = []
 		tmp.reserveCapacity(ConsoleColor.MAX_ATTRIBUTES * 2 + ConsoleDecoration.MAX_ATTRIBUTES)
 		build(sequence: &tmp)
-		return tmp
+		return ControlSequence.SGR(tmp)
 	}
 	
 	//MARK: Initialization

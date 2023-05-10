@@ -4,33 +4,25 @@
 import PackageDescription
 
 let package = Package(
-	name: "Terminal",
+	name: "Console",
 	products: [
-		.library(name: "Terminal", targets: ["Terminal"]),
+		.library(
+			name: "Console",
+			targets: ["Terminal"]
+		),
 	],
 	targets: [
 		.target(name: "Termios"),
-		.target(name: "ControlSequence"),
-		.target(name: "Prompt"),
+		.target(name: "Terminal"),
 		
-			.target(
-				name: "Terminal",
-				dependencies: [
-					.target(name: "Termios"),
-					.target(name: "ControlSequence")
-				]),
+		.target(
+			name: "Console",
+			dependencies: [
+				.target(name: "Termios"),
+				.target(name: "Terminal"),
+			]
+		),
 		
-//		.target(name: "TerminalApp", dependencies: ["Terminal"]),
-		
-//			.target(name: "TestApp", dependencies: ["TerminalApp"]),
-		
-			.testTarget(name: "TerminalTests", dependencies: ["Terminal"]),
+		.testTarget(name: "TerminalTests", dependencies: ["Terminal"]),
 	]
 )
-
-// Beat:
-// [ Terminal ] ANSITerminal, swift-commandline-kit
-// [ Styling ] ColorizeSwift, Rainbow, ANSITerminal
-// [ CLI ] vapor/ConsoleKit, swift-argument-parser, swift-commandline-kit
-// [ UI ] TermKit, Ashen
-// [ REPL ] ConsoleKit, replxx

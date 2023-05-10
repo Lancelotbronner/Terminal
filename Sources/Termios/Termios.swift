@@ -71,6 +71,26 @@ public struct Termios {
 		Termios(retrieve: STDIN_FILENO)
 	}
 	
+	//MARK: Static Methods
+	
+	/// Executes a block with a specific configuration, then returns to the previous configuration
+	@inlinable public static func with(configuration mode: Termios, do block: () -> Void) {
+		let backup = Termios.current
+		mode.apply()
+		block()
+		backup.apply()
+	}
+	
+	/// Executes a block with a specific configuration, then returns to the previous configuration
+	@inlinable public static func with(configuration mode: (inout Termios) -> Void, do block: () -> Void) {
+		let backup = Termios.current
+		var tmp = backup
+		mode(&tmp)
+		tmp.apply()
+		block()
+		backup.apply()
+	}
+	
 	//MARK: Methods
 	
 	/// Applies the configuration to STDIN

@@ -8,11 +8,55 @@
 //MARK: - String Styling
 
 extension String {
+	
+	//MARK: Style
+	
+	@inlinable public func style(_ style: Style) -> String {
+		apply(style.description)
+	}
+	
+	@inlinable public func style(
+		foreground: ForegroundColor = .inherited,
+		background: BackgroundColor = .inherited,
+		decorations: ConsoleDecoration = .inherited
+	) -> String {
+		style(Style(
+			foreground: foreground,
+			background: background,
+			decoration: decorations
+		))
+	}
+	
+	@inlinable public func style(
+		foreground: ForegroundColor = .inherited,
+		background: BackgroundColor = .inherited,
+		weight: ConsoleWeight = .inherited,
+		underline: ConsoleUnderline = .inherited,
+		italics: ConsoleItalics = .inherited,
+		blink: ConsoleBlink = .inherited,
+		inverse: ConsoleInverse = .inherited,
+		visibility: ConsoleVisibility = .inherited,
+		strikethrough: ConsoleStrikethrough = .inherited
+	) -> String {
+		style(
+			foreground: foreground,
+			background: background,
+			decorations: ConsoleDecoration(
+				weight: weight,
+				underline: underline,
+				italics: italics,
+				blink: blink,
+				inverse: inverse,
+				visibility: visibility,
+				strikethrough: strikethrough
+			)
+		)
+	}
 
 	//MARK: Foreground Colors
 
 	@inlinable public func foreground(_ color: ForegroundColor) -> String {
-		apply(ControlSequence.SGR(color.sequence))
+		apply(color.description)
 	}
 	
 	@inlinable public func foreground(extended code: UInt8) -> String {
@@ -94,7 +138,7 @@ extension String {
 	//MARK: Background Colors
 
 	@inlinable public func background(_ color: BackgroundColor) -> String {
-		apply(ControlSequence.SGR(color.sequence))
+		apply(color.description)
 	}
 	
 	@inlinable public func background(extended code: UInt8) -> String {
@@ -176,7 +220,7 @@ extension String {
 	//MARK: Decoration
 
 	@inlinable public func decoration(_ decoration: ConsoleDecoration) -> String {
-		apply(ControlSequence.SGR(decoration.sequence))
+		apply(decoration.description)
 	}
 	
 	@inlinable public func weight(_ decoration: ConsoleWeight) -> String {
@@ -205,10 +249,6 @@ extension String {
 	
 	@inlinable public func strikethrough(_ decoration: ConsoleStrikethrough) -> String {
 		decorate(decoration.code)
-	}
-
-	@inlinable public var regular: String {
-		begin(ControlSequence.SGR(ConsoleDecoration.regular.sequence))
 	}
 
 	@inlinable public var bold: String {
